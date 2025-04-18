@@ -217,7 +217,7 @@ python scripts/vllm_inference.py \
     --input_csv "./examples/test.csv" \
     --out_csv "./examepls/test_result.csv" \
     --tp 1 \
-    --bs 32
+    --bs 4
 ```
 
 ## Acknowledgements
