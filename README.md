@@ -191,7 +191,7 @@ python3 generate_video_df.py \
   --prompt "A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface." \
   --offload
 ```
-> **Note**: You can use `--ar_step 10` to enable asynchronous inference. If you want to run the DF model for **image-to-video (I2V)** tasks, add `--image ${image_path}` to your command.
+> **Note**: You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded. If you want to run the DF model for **image-to-video (I2V)** tasks, add `--image ${image_path}` to your command. `--addnoise_condition 20` is recommanded to add for better long video consistency.
 
 - **Text To Video & Image To Video**
 
