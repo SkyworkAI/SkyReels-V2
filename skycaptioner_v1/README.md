@@ -55,7 +55,7 @@ Our Captioning model captures multi-dimensional details:
 ### Dynamic Caption Fusion:
 
 * Adapts output length based on application (T2V/I2V).
-* Employs LLM refinement to ensure natural language fluency while preserving structural fidelity.
+* Employs LLM Model to fusion structural fields to get a natural and fluency caption for downstream tasks.
 
 ## 📊 Benchmark Results
 
@@ -182,12 +182,16 @@ SkyCaptioner-V1 demonstrates significant improvements over existing models in ke
 </table>
 </p>
 
-## 📦 Model Download
+## 📦 Model Downloads
 
 Our SkyCaptioner-V1 model can be downloaded from  [SkyCaptioner-V1  Model](https://huggingface.co/Skywork/SkyCaptioner-V1).
+We use [Qwen2.5-32B-Instruct](https://huggingface.co/Qwen/Qwen2.5-32B-Instruct) as our caption fusion model to intelligently combine structured caption fields, producing either dense or sparse final captions depending on application requirements.
 
 ```shell
+# download SkyCaptioner-V1
 huggingface-cli download Skywork/SkyCaptioner-V1 /path/to/your_local_model_path
+# download Qwen2.5-32B-Instruct
+huggingface-cli download Qwen/Qwen2.5-32B-Instruct /path/to/your_local_model_path2
 ```
 
 ## 🛠️ Running Guide
@@ -209,16 +213,34 @@ pip install -r requirements.txt
 
 ### Running Command
 
+#### Get Structural Caption by SkyCaptioner-V1
+
 ```shell
 export SkyCaptioner_V1_Model_PATH="/path/to/your_local_model_path"
 
-python scripts/vllm_inference.py \
+python scripts/vllm_struct_caption.py \
     --model_path ${SkyCaptioner_V1_Model_PATH} \
     --input_csv "./examples/test.csv" \
     --out_csv "./examepls/test_result.csv" \
     --tp 1 \
     --bs 4
 ```
+
+#### T2V/I2V Caption Fusion by Qwen2.5-32B-Instruct Model
+
+```shell
+export LLM_MODEL_PATH="/path/to/your_local_model_path2"
+
+python scripts/vllm_fusion_caption.py \
+    --model_path ${LLM_MODEL_PATH} \
+    --input_csv "./examples/test_result.csv" \
+    --out_csv "./examples/test_result_caption.csv" \
+    --bs 4 \
+    --tp 1 \
+    --task t2v
+```
+> **Note**: 
+> - If you want to get i2v caption, just change the `--task t2v` to `--task i2v` in your Command.
 
 ## Acknowledgements
 
@@ -228,7 +250,7 @@ We would like to thank the contributors of <a href="https://github.com/QwenLM/Qw
 
 ```bibtex
 @misc{SkyReelsV2,
-author = {SkyReels Team},
+author = {Guibin Chen and Dixuan Lin and Jiangping Yang and Chunze Lin and Juncheng Zhu and Mingyuan Fan and Hao Zhang and Sheng Chen and Zheng Chen and Chengchen Ma and Weiming Xiong and Wei Wang and Nuo Pang and Kang Kang and Zhiheng Xu and Yuzhe Jin and Yupeng Liang and Yubing Song and Peng Zhao and Boyuan Xu and Di Qiu and Debang Li and Zhengcong Fei and Yang Li and Yahui Zhou},
 title = {Skyreels V2:Infinite-Length Film Generative Model},
 year = {2025},
 eprint={2504.13074},
