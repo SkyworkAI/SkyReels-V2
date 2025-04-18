@@ -19,9 +19,20 @@ Welcome to the SkyReels V2 repository! Here, you'll find the model weights and i
 
 
 ## 🎥 Demos
-<div align="center">
-<video src="https://github.com/user-attachments/docs/assets/2dbd116a-033d-4f7e-bd90-78a3da47cd9c" width="70%"> </video>
-</div>
+## 🎥 Demos
+<table>
+  <tr>
+    <td align="center">
+      <video src="https://github.com/user-attachments/assets/f6f9f9a7-5d5f-433c-9d73-d8d593b7ad25" width="100%"></video>
+    </td>
+    <td align="center">
+      <video src="https://github.com/user-attachments/assets/0eb13415-f4d9-4aaf-bcd3-3031851109b9" width="100%"></video>
+    </td>
+    <td align="center">
+      <video src="https://github.com/user-attachments/assets/dcd16603-5bf4-4786-8e4d-1ed23889d07a" width="100%"></video>
+    </td>
+  </tr>
+</table>
 
 
 ## 📑 TODO List
@@ -192,7 +203,10 @@ python3 generate_video_df.py \
   --prompt "A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface." \
   --offload
 ```
-> **Note**: You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded. If you want to run the DF model for **image-to-video (I2V)** tasks, add `--image ${image_path}` to your command. `--addnoise_condition 20` is recommanded to add for better long video consistency.
+> **Note**: 
+> - If you want to run the DF model for **image-to-video (I2V)** tasks, add `--image ${image_path}` to your command.
+> - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded.
+> - `--addnoise_condition 20` is recommanded to add for better long video consistency.
 
 - **Text To Video & Image To Video**
 
@@ -212,27 +226,32 @@ python3 generate_video.py \
 ```
 > **Note**: When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter.
 
-**More Configurations**
-We list some useful configurations for easy usage:
-| Argument | Recommended | Description |
+**Advanced Configuration Options**
+Below are the key parameters you can customize for video generation:
+
+| Parameter | Recommended Value | Description |
 |:----------------------:|:---------:|:-----------------------------------------:|
-| --prompt |  | Text prompt for video generation |
-| --image |  | Input image Path for video generation |
-| --resolution | 540P or 720P | Resolution of the generated video (depends on model type) |
-| --num_frames | 97 or 121 | Number of frames in the generated video (**97 for 540P**, **121 for 720P**) |
-| --inference_steps | 50 | Number of sampling steps |
-| --fps | 24 | Frame rate of the generated video |
-| --shift | 8.0 or 5.0 | Shift factor for flow matching schedulers (Recommended: **8.0 for T2V models**, **5.0 for I2V models**) |
-| --guidance_scale | 6.0 or 5.0| Classifier-free guidance scale (Recommended: **6.0 for T2V models**, **5.0 for for I2V models**) |
-| --seed |  | Random seed for video generation (if None, a random seed will be initialized) |
-| --offload | True | Enable CPU offload for model transformer and t5 loading to save memory (necessary for high-resolution video generation) |
-| --use_usp | True | Enable multi-GPU inference using xDiT USP |
-| --outdir | ./video_out | Directory path to save the generated video |
-| Diffusion Forcing Additional Parameters  |
-| --ar_step | 0 | Step size for asynchronous inference |
-| --base_num_frames | 97 or 121 | Number of base frames in the generated video (**97 for 540P**, **121 for 720P**) |
-| --overlap_history | 17 | Number of overlapping frames for continuity |
-| --addnoise_condition | 0 | Control noise added to conditioning frames |
+| --prompt |  | Text description for generating your video |
+| --image |  | Path to input image for image-to-video generation |
+| --resolution | 540P or 720P | Output video resolution (select based on model type) |
+| --num_frames | 97 or 121 | Total frames to generate (**97 for 540P models**, **121 for 720P models**) |
+| --inference_steps | 50 | Number of denoising steps (higher = better quality but slower) |
+| --fps | 24 | Frames per second in the output video |
+| --shift | 8.0 or 5.0 | Flow matching scheduler parameter (**8.0 for T2V**, **5.0 for I2V**) |
+| --guidance_scale | 6.0 or 5.0 | Controls text adherence strength (**6.0 for T2V**, **5.0 for I2V**) |
+| --seed |  | Fixed seed for reproducible results (omit for random generation) |
+| --offload | True | Offloads model components to CPU to reduce VRAM usage (recommended) |
+| --use_usp | True | Enables multi-GPU acceleration with xDiT USP |
+| --outdir | ./video_out | Directory where generated videos will be saved |
+
+**Diffusion Forcing Additional Parameters**
+| Parameter | Recommended Value | Description |
+|:----------------------:|:---------:|:-----------------------------------------:|
+| --ar_step | 0 | Controls asynchronous inference (0 for synchronous mode) |
+| --base_num_frames | 97 or 121 | Base frame count (**97 for 540P**, **121 for 720P**) |
+| --overlap_history | 17 | Number of frames to overlap for smooth transitions in long videos |
+| --addnoise_condition | 20 | Improves consistency in extended video generation |
+| --causal_block_size | 5 | Recommended when using asynchronous inference (--ar_step > 0) |
 
 #### Multi-GPU inference using xDiT USP
 
