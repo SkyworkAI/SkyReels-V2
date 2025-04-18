@@ -645,7 +645,7 @@ To objectively compare SkyReels-V2 T2V Model against other leading open-source T
 The VBench results demonstrate that SkyReels-V2 outperforms all compared models including HunyuanVideo-13B and Wan2.1-14B, With the highest total score (83.9%) and quality score (84.7%). In this evaluation, the semantic score is slightly lower than Wan2.1-14B, while we outperform Wan2.1-14B in human evaluations, with the primary gap attributed to V-Bench’s insufficient evaluation of shot-scenario semantic adherence.
 
 ## Acknowledgements
-We would like to thank the contributors of <a href="https://huggingface.co/tencent/HunyuanVideo">HunyuanVideo</a>, <a href="https://github.com/chengzeyi/ParaAttention">ParaAttention</a> and <a href="https://github.com/huggingface/diffusers">Diffusers</a> repositories, for their open research and contributions.
+We would like to thank the contributors of <a href="https://github.com/Wan-Video/Wan2.1">HunyuanVideo</a> and <a href="https://github.com/xdit-project/xDiT">XDiT</a> repositories, for their open research and contributions.
 
 ## Citation
 
