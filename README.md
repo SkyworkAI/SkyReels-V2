@@ -215,21 +215,21 @@ python3 generate_video.py \
 We list some useful configurations for easy usage:
 | Argument | Recommended | Description |
 |:----------------------:|:---------:|:-----------------------------------------:|
-| --prompt | None | Text prompt for video generation |
-| --image | None | Input image Path for video generation |
+| --prompt |  | Text prompt for video generation |
+| --image |  | Input image Path for video generation |
 | --resolution | 540P or 720P | Resolution of the generated video (depends on model type) |
-| --num_frames | 97 or 121 | Number of frames in the generated video (97 for 540P, 121 for 720P) |
+| --num_frames | 97 or 121 | Number of frames in the generated video (**97 for 540P**, **121 for 720P**) |
 | --inference_steps | 50 | Number of sampling steps |
 | --fps | 24 | Frame rate of the generated video |
-| --shift | 8.0 | Shift factor for flow matching schedulers (Recommended: 8.0 for T2V models, 5.0 for I2V models) |
-| --guidance_scale | 6.0 | Classifier-free guidance scale (Recommended: 6.0 for T2V models, 5.0 for for I2V models) |
-| --seed | None | Random seed for video generation (if None, a random seed will be initialized) |
-| --use-cpu-offload | False | Enable CPU offload for model transformer and t5 loading to save memory (necessary for high-resolution video generation) |
+| --shift | 8.0 or 5.0 | Shift factor for flow matching schedulers (Recommended: **8.0 for T2V models**, **5.0 for I2V models**) |
+| --guidance_scale | 6.0 or 5.0| Classifier-free guidance scale (Recommended: **6.0 for T2V models**, **5.0 for for I2V models**) |
+| --seed |  | Random seed for video generation (if None, a random seed will be initialized) |
+| --offload | True | Enable CPU offload for model transformer and t5 loading to save memory (necessary for high-resolution video generation) |
 | --use_usp | True | Enable multi-GPU inference using xDiT USP |
 | --outdir | ./video_out | Directory path to save the generated video |
 | Diffusion Forcing Additional Parameters  |
 | --ar_step | 0 | Step size for asynchronous inference |
-| --base_num_frames | 97 or 121 | Number of base frames in the generated video (97 for 540P, 121 for 720P) |
+| --base_num_frames | 97 or 121 | Number of base frames in the generated video (**97 for 540P**, **121 for 720P**) |
 | --overlap_history | 17 | Number of overlapping frames for continuity |
 | --addnoise_condition | 0 | Control noise added to conditioning frames |
 
