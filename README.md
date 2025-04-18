@@ -176,7 +176,8 @@ After downloading, set the model path in your generation commands:
 
 - **Diffusion Forcing**
 
-In diffusion forcing, we support both synchronous and asynchronous inference modes. Additionally, we support generating long videos from specified images.
+The <a href="https://arxiv.org/abs/2407.01392">**Diffusion Forcing**</a> version model allows us to generate Infinite-Length Films, and this model supports both t2v and i2v tasks. we support both synchronous and asynchronous inference modes
+
 ```shell
 model_id=Skywork/SkyReels-V2-DF-14B-540P
 # synchronous inference
@@ -441,8 +442,7 @@ To comprehensively evaluate our proposed method, we construct the SkyReels-Bench
 
 #### Human Evaluation
 
-For human evaluation, we design SkyReels-Bench with 1,020 text prompts, systematically assessing three dimensions: Instruction Adherence, Motion Quality, Consistency and Visual Quality. This benchmark is designed to evaluate both text-to-video (T2V) and image-to-video (I2V) generation models, providing comprehensive assessment across different
-generation paradigms.
+For human evaluation, we design SkyReels-Bench with 1,020 text prompts, systematically assessing three dimensions: Instruction Adherence, Motion Quality, Consistency and Visual Quality. This benchmark is designed to evaluate both text-to-video (T2V) and image-to-video (I2V) generation models, providing comprehensive assessment across different generation paradigms. To ensure fairness, all models were evaluated under default settings with consistent resolutions, and no post-generation filtering was applied.
 
 - Text To Video Models
 
@@ -460,7 +460,7 @@ generation paradigms.
   </thead>
   <tbody>
     <tr>
-      <td>Runway-Gen3 Alpha</td>
+      <td><a href="https://runwayml.com/research/introducing-gen-3-alpha">Runway-Gen3 Alpha</a></td>
       <td>2.53</td>
       <td>2.19</td>
       <td>2.57</td>
@@ -468,7 +468,7 @@ generation paradigms.
       <td>2.11</td>
     </tr>
     <tr>
-      <td>HunyuanVideo-13B</td>
+      <td><a href="https://github.com/Tencent/HunyuanVideo">HunyuanVideo-13B</a></td>
       <td>2.82</td>
       <td>2.64</td>
       <td>2.81</td>
@@ -476,7 +476,7 @@ generation paradigms.
       <td>2.61</td>
     </tr>
     <tr>
-      <td>Kling-1.6 STD Mode</td>
+      <td><a href="https://klingai.com">Kling-1.6 STD Mode</a></td>
       <td>2.99</td>
       <td>2.77</td>
       <td>3.05</td>
@@ -484,7 +484,7 @@ generation paradigms.
       <td><strong>2.76</strong></td>
     </tr>
     <tr>
-      <td>Hailuo-01</td>
+      <td><a href="https://hailuoai.video">Hailuo-01</a></td>
       <td>3.0</td>
       <td>2.8</td>
       <td>3.08</td>
@@ -492,7 +492,7 @@ generation paradigms.
       <td>2.74</td>
     </tr>
     <tr>
-      <td>Wan2.1-14B</td>
+      <td><a href="https://github.com/Wan-Video/Wan2.1">Wan2.1-14B</a></td>
       <td>3.12</td>
       <td>2.91</td>
       <td>3.31</td>
@@ -511,8 +511,7 @@ generation paradigms.
 </table>
 </p>
 
-The evaluation demonstrates that our model achieves significant advancements in instruction adherence compared to baseline methods, while maintaining competitive performance in motion
-without sacrificing the consistency. To ensure fairness, all models were evaluated under default settings with consistent resolutions, and no post-generation filtering was applied.
+The evaluation demonstrates that our model achieves significant advancements in **instruction adherence (3.15)** compared to baseline methods, while maintaining competitive performance in **motion quality (2.74)** without sacrificing the **consistency (3.35)**. 
 
 - Image To Video Models
 
@@ -530,7 +529,7 @@ without sacrificing the consistency. To ensure fairness, all models were evaluat
   </thead>
   <tbody>
     <tr>
-      <td>HunyuanVideo-13B</td>
+      <td><a href="https://github.com/Tencent/HunyuanVideo">HunyuanVideo-13B</a></td>
       <td>2.84</td>
       <td>2.97</td>
       <td>2.95</td>
@@ -538,7 +537,7 @@ without sacrificing the consistency. To ensure fairness, all models were evaluat
       <td>2.56</td>
     </tr>
     <tr>
-      <td>Wan2.1-14B</td>
+      <td><a href="https://github.com/Wan-Video/Wan2.1">Wan2.1-14B</a></td>
       <td>2.85</td>
       <td>3.10</td>
       <td>2.81</td>
@@ -546,7 +545,7 @@ without sacrificing the consistency. To ensure fairness, all models were evaluat
       <td>2.48</td>
     </tr>
     <tr>
-      <td>Hailuo-01</td>
+      <td><a href="https://hailuoai.video">Hailuo-01</a></td>
       <td>3.05</td>
       <td>3.31</td>
       <td>2.58</td>
@@ -554,7 +553,7 @@ without sacrificing the consistency. To ensure fairness, all models were evaluat
       <td>2.74</td>
     </tr>
     <tr>
-      <td>Kling-1.6 Pro Mode</td>
+      <td><a href="https://klingai.com">Kling-1.6 Pro Mode</a></td>
       <td>3.4</td>
       <td>3.56</td>
       <td>3.03</td>
@@ -562,7 +561,7 @@ without sacrificing the consistency. To ensure fairness, all models were evaluat
       <td>3.41</td>
     </tr>
     <tr>
-      <td>Runway-Gen4</td>
+      <td><a href="https://runwayml.com/research/introducing-runway-gen-4">Runway-Gen4</a></td>
       <td>3.39</td>
       <td>3.75</td>
       <td>3.2</td>
@@ -607,25 +606,25 @@ To objectively compare SkyReels-V2 T2V Model against other leading open-source T
   </thead>
   <tbody>
     <tr>
-      <td>OpenSora 2.0</td>
+      <td><a href="https://github.com/hpcaitech/Open-Sora">OpenSora 2.0</a></td>
       <td>81.5 %</td>
       <td>82.1 %</td>
       <td>78.2 %</td>
     </tr>
     <tr>
-      <td>CogVideoX1.5-5B</td>
+      <td><a href="https://github.com/THUDM/CogVideo">CogVideoX1.5-5B</a></td>
       <td>80.3 %</td>
       <td>80.9 %</td>
       <td>77.9 %</td>
     </tr>
     <tr>
-      <td>HunyuanVideo-13B</td>
+      <td><a href="https://github.com/Tencent/HunyuanVideo">HunyuanVideo-13B</a></td>
       <td>82.7 %</td>
       <td>84.4 %</td>
       <td>76.2 %</td>
     </tr>
     <tr>
-      <td>Wan2.1-14B</td>
+      <td><a href="https://github.com/Wan-Video/Wan2.1">Wan2.1-14B</a></td>
       <td>83.7 %</td>
       <td>84.2 %</td>
       <td><strong>81.4 %</strong></td>
