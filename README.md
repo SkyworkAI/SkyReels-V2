@@ -239,9 +239,7 @@ We use [xDiT](https://github.com/xdit-project/xDiT) USP to accelerate inference.
 ```shell
 model_id=Skywork/SkyReels-V2-DF-14B-540P
 # diffusion forcing synchronous inference
-torchrun \
-  --nproc_per_node=2 \
-  generate_video_df.py \
+torchrun --nproc_per_node=2 generate_video_df.py \
   --model_id ${model_id} \
   --height 544 \
   --width 960 \
