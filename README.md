@@ -328,7 +328,7 @@ SkyCaptioner-V1 serves as our video captioning model for data annotation. This m
       <th>model</th>
       <th><a href="https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct">Qwen2.5-VL-7B-Ins.</a></th>
       <th><a href="https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct">Qwen2.5-VL-72B-Ins.</a></th>
-      <th><a href="https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct">Tarsier2-Recap-7b</a></th>
+      <th><a href="https://huggingface.co/omni-research/Tarsier2-Recap-7b">Tarsier2-Recap-7b</a></th>
       <th>SkyCaptioner-V1</th>
     </tr>
   </thead>
