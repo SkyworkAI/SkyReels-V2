@@ -234,7 +234,7 @@ Below are the key parameters you can customize for video generation:
 | --image |  | Path to input image for image-to-video generation |
 | --resolution | 540P or 720P | Output video resolution (select based on model type) |
 | --num_frames | 97 or 121 | Total frames to generate (**97 for 540P models**, **121 for 720P models**) |
-| --inference_steps | 50 | Number of denoising steps (higher = better quality but slower) |
+| --inference_steps | 50 | Number of denoising steps |
 | --fps | 24 | Frames per second in the output video |
 | --shift | 8.0 or 5.0 | Flow matching scheduler parameter (**8.0 for T2V**, **5.0 for I2V**) |
 | --guidance_scale | 6.0 or 5.0 | Controls text adherence strength (**6.0 for T2V**, **5.0 for I2V**) |
@@ -249,7 +249,7 @@ Below are the key parameters you can customize for video generation:
 | --ar_step | 0 | Controls asynchronous inference (0 for synchronous mode) |
 | --base_num_frames | 97 or 121 | Base frame count (**97 for 540P**, **121 for 720P**) |
 | --overlap_history | 17 | Number of frames to overlap for smooth transitions in long videos |
-| --addnoise_condition | 20 | Improves consistency in extended video generation |
+| --addnoise_condition | 20 | Improves consistency in long video generation |
 | --causal_block_size | 5 | Recommended when using asynchronous inference (--ar_step > 0) |
 
 #### Multi-GPU inference using xDiT USP
