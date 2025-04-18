@@ -17,8 +17,6 @@ Welcome to the SkyReels V2 repository! Here, you'll find the model weights and i
 * Apr 21, 2025: 👋 We release the inference code and model weights of [SkyReels-V2](https://huggingface.co/collections/Skywork/skyreels-v2-6801b1b93df627d441d0d0d9) Series Models.
 * Apr 3, 2025: 🔥 We also release [SkyReels-A2](https://github.com/SkyworkAI/SkyReels-A2). This is an open-sourced controllable video generation framework capable of assembling arbitrary visual elements.
 
-
-## 🎥 Demos
 ## 🎥 Demos
 <table>
   <tr>
@@ -227,6 +225,7 @@ python3 generate_video.py \
 > **Note**: When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter.
 
 **Advanced Configuration Options**
+
 Below are the key parameters you can customize for video generation:
 
 | Parameter | Recommended Value | Description |
