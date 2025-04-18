@@ -5,7 +5,7 @@
 # SkyReels V2: Infinite-Length Film Generative Model
 
 <p align="center">
-🤗 <a href="https://huggingface.co/collections/Skywork/skyreels-v1-67b34676ff65b4ec02d16307" target="_blank">Hugging Face</a> · 👋 <a href="https://www.skyreels.ai/home?utm_campaign=github_V2" target="_blank">Playground</a> · 💬 <a href="https://discord.gg/PwM6NYtccQ" target="_blank">Discord</a> · 📑 <a href="https://arxiv.org/pdf/2504.13074">Technical Report</a>
+🤗 <a href="https://huggingface.co/collections/Skywork/skyreels-v2-6801b1b93df627d441d0d0d9" target="_blank">Hugging Face</a> · 👋 <a href="https://www.skyreels.ai/home?utm_campaign=github_V2" target="_blank">Playground</a> · 💬 <a href="https://discord.gg/PwM6NYtccQ" target="_blank">Discord</a> · 📑 <a href="https://arxiv.org/pdf/2504.13074">Technical Report</a>
 </p>
 
 ---
@@ -15,7 +15,7 @@ Welcome to the SkyReels V2 repository! Here, you'll find the model weights and i
 ## 🔥🔥🔥 News!!
 
 * Apr 21, 2025: 👋 We release the inference code and model weights of [SkyReels-V2](https://huggingface.co/SkyworkAI/SkyReels-V2) Series Models.
-* Apr 21, 2025: 🔥 We also release [SkyReels-A2](https://github.com/SkyworkAI/SkyReels-A2). This is an open-sourced and effective framework portrait image animation model.
+* Apr 3, 2025: 🔥 We also release [SkyReels-A2](https://github.com/SkyworkAI/SkyReels-A2). This is an open-sourced and effective framework portrait image animation model.
 
 
 ## 🎥 Demos
@@ -50,7 +50,6 @@ pip install -r requirements.txt
 
 #### Model Download
 You can download our models from Hugging Face:
-
 <table>
   <thead>
     <tr>
@@ -67,7 +66,7 @@ You can download our models from Hugging Face:
       <td>1.3B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-1.3B">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-1.3B">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="2">5B</td>
@@ -84,19 +83,19 @@ You can download our models from Hugging Face:
       <td rowspan="2">14B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-540P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
       <td>720P</td>
       <td>720 * 1280 * 121f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-720P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="5">Text-to-Video</td>
       <td>1.3B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-1.3B">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-1.3B">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="2">5B</td>
@@ -113,19 +112,19 @@ You can download our models from Hugging Face:
       <td rowspan="2">14B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-540P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
       <td>720P</td>
       <td>720 * 1280 * 121f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-720P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="5">Image-to-Video</td>
       <td>1.3B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-1.3B">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-1.3B">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="2">5B</td>
@@ -142,12 +141,12 @@ You can download our models from Hugging Face:
       <td rowspan="2">14B</td>
       <td>540P</td>
       <td>544 * 960 * 97f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-540P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
       <td>720P</td>
       <td>720 * 1280 * 121f</td>
-      <td><a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-720P">Download</a></td>
+      <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="3">Camera Director</td>
@@ -275,8 +274,8 @@ torchrun --nproc_per_node=2 generate_video.py \
 
 ## Contents
   - [Abstract](#abstract)
-  - [Overview of the SkyReels v2 methodology](#overview-of-the-skyreels-v2-methodology)
-  - [SkyReels V2 Key Contribution](#skyreels-v2-key-contribution)
+  - [Methodology Overview of SkyReels-V2](#methodology-overview-of-skyreels-v2)
+  - [Key Contributions of SkyReels-V2](#key-contributions-of-skyreels-v2)
     - [Skyreels Captioner](#skyreels-captioner)
     - [Reinforcement Learning](#reinforcement-learning)
     - [Diffusion Forcing](#diffusion-forcing)
