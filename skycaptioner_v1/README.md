@@ -10,7 +10,7 @@ Welcome to the SkyCaptioner-V1 repository! Here, you'll find the structural capt
 
 ## 🔥🔥🔥 News!!
 
-* Apr 21, 2025: 👋 We release the [vllm](https://github.com/vllm-project/vllm) batch inference code for SkyCaptioner-V1  Model.
+* Apr 21, 2025: 👋 We release the [vllm](https://github.com/vllm-project/vllm) batch inference code for SkyCaptioner-V1 Model and caption fusion inference code.
 * Apr 21, 2025: 👋 We release the first film-video-oriented caption model [SkyCaptioner-V1  Model](https://huggingface.co/Skywork/SkyCaptioner-V1). For more details, please check our [paper](https://arxiv.org/pdf/2504.13074).
 
 ## 📑 TODO List
@@ -189,9 +189,9 @@ We use [Qwen2.5-32B-Instruct](https://huggingface.co/Qwen/Qwen2.5-32B-Instruct) 
 
 ```shell
 # download SkyCaptioner-V1
-huggingface-cli download Skywork/SkyCaptioner-V1 /path/to/your_local_model_path
+huggingface-cli download Skywork/SkyCaptioner-V1 --local_dir /path/to/your_local_model_path
 # download Qwen2.5-32B-Instruct
-huggingface-cli download Qwen/Qwen2.5-32B-Instruct /path/to/your_local_model_path2
+huggingface-cli download Qwen/Qwen2.5-32B-Instruct --local_dir /path/to/your_local_model_path2
 ```
 
 ## 🛠️ Running Guide
