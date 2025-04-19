@@ -37,8 +37,7 @@ SkyCaptioner-V1 is a structured video captioning model designed to generate high
 Our Captioning model captures multi-dimensional details:
 
 * ​​**Subjects**​: Appearance, action, expression, position, and hierarchical categorization.
-* ​​**Shot Metadata**​: Shot type (e.g., close-up, long shot), shot angle, shot position, camera motion.
-* **General desc**: environment, and lighting.
+* ​​**Shot Metadata**​: Shot type (e.g., close-up, long shot), shot angle, shot position, camera motion, environment, lighting, etc.
 
 ### Sub-Expert Integration
 
