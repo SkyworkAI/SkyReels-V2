@@ -281,7 +281,7 @@ torchrun --nproc_per_node=2 generate_video.py \
 
 ## Contents
   - [Abstract](#abstract)
-  - [Methodology of SkyReels-V2](#methodology-overview-of-skyreels-v2)
+  - [Methodology of SkyReels-V2](#methodology-of-skyreels-v2)
   - [Key Contributions of SkyReels-V2](#key-contributions-of-skyreels-v2)
     - [Skyreels Captioner](#skyreels-captioner)
     - [Reinforcement Learning](#reinforcement-learning)
