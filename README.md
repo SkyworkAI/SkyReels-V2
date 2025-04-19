@@ -237,6 +237,7 @@ Below are the key parameters you can customize for video generation:
 | --offload | True | Offloads model components to CPU to reduce VRAM usage (recommended) |
 | --use_usp | True | Enables multi-GPU acceleration with xDiT USP |
 | --outdir | ./video_out | Directory where generated videos will be saved |
+| --prompt_enhance | True | expand the prompt into a more detailed description |
 
 **Diffusion Forcing Additional Parameters**
 | Parameter | Recommended Value | Description |
