@@ -195,6 +195,7 @@ python3 generate_video_df.py \
 > - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded.
 > - `--addnoise_condition 20` is recommanded to add for better long video consistency.
 > - To reduce peak VRAM, lower the `--base_num_frames` for the same generative length `--num_frames`. This may slightly reduce video quality.
+> - You can use `--prompt_enhance` to expand the prompt into a more detailed description, which is only supported for text-to-video.
 
 - **Text To Video & Image To Video**
 
@@ -212,7 +213,12 @@ python3 generate_video.py \
   --prompt "A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface." \
   --offload
 ```
-> **Note**: When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter.
+> **Note**: 
+> - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter.
+> - You can use `--prompt_enhance` to expand the prompt into a more detailed description, which is only supported for text-to-video.
+
+- **Prompt Rewriter**
+The prompt rewriter is implemented based on <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct">Qwen2.5-32B-Instruct</a> and  is utilized via the `--prompt_enhance` parameter. It works ideally for short prompts, while for long prompts, it might generate an excessively lengthy prompt that could lead to over-saturation in the generative video.
 
 **Advanced Configuration Options**
 
