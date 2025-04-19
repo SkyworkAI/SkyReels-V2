@@ -39,7 +39,7 @@ The demos above showcase 30-second videos generated using our SkyReels-V2 Diffus
 - [x] Technique Report
 - [x] Checkpoints of the 14B and 1.3B Models Series
 - [x] Single-GPU & Multi-GPU Inference Code
-- [x] SkyCaptioner V1 Video Annotation Model
+- [x] SkyCaptioner-V1 Video Annotation Model
 - [x] Prompt Rewrite
 - [ ] Diffusers integration
 - [ ] Checkpoints of the 5B Models Series
