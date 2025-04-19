@@ -1,3 +1,4 @@
 from .diffusion_forcing_pipeline import DiffusionForcingPipeline
 from .text2video_pipeline import Text2VideoPipeline
 from .image2video_pipeline import Image2VideoPipeline
+from .prompt_rewriter import PromptRewriter

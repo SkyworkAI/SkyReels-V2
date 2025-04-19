@@ -9,6 +9,7 @@ from diffusers.utils import load_image
 
 from skyreels_v2_infer.pipelines import Image2VideoPipeline
 from skyreels_v2_infer.pipelines import Text2VideoPipeline
+from skyreels_v2_infer.pipelines import PromptRewriter
 
 MODEL_ID_CONFIG = {
     "text2video": [
@@ -45,6 +46,7 @@ if __name__ == "__main__":
         type=str,
         default="A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface.",
     )
+    parser.add_argument("--prompt_enhance", action="store_true")
     args = parser.parse_args()
 
     assert (args.use_usp and args.seed is not None) or (not args.use_usp), "usp mode need seed"
@@ -72,6 +74,10 @@ if __name__ == "__main__":
             ulysses_degree=dist.get_world_size(),
         )
 
+    if args.prompt_enhance and args.image is None:
+        print(f'init prompt rewriter')
+        prompt_rewriter = PromptRewriter()
+
     if image is None:
         assert "T2V" in args.model_id, f"check model_id:{args.model_id}"
         print("init text2video pipeline")
@@ -84,9 +90,14 @@ if __name__ == "__main__":
         pipe = Image2VideoPipeline(
             model_path=args.model_id, dit_path=args.model_id, use_usp=args.use_usp, offload=args.offload
         )
+    
+    prompt_input = args.prompt
+    if args.prompt_enhance and image is not None:
+        prompt_input = prompt_rewriter(prompt_input)
+        print(f'rewritten prompt: {prompt_input}')
 
     kwargs = {
-        "prompt": args.prompt,
+        "prompt": prompt_input,
         "negative_prompt": negative_prompt,
         "num_frames": args.num_frames,
         "num_inference_steps": args.inference_steps,
