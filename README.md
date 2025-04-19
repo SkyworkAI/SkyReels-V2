@@ -287,7 +287,7 @@ torchrun --nproc_per_node=2 generate_video.py \
     - [Skyreels Captioner](#skyreels-captioner)
     - [Reinforcement Learning](#reinforcement-learning)
     - [Diffusion Forcing](#diffusion-forcing)
-    - [Hight-Quality Supervised Fine-Tuning(SFT)](#hight-quality-supervised-fine-tuningsft)
+    - [Hight-Quality Supervised Fine-Tuning(SFT)](#high-quality-supervised-fine-tuning-sft)
   - [Performance](#performance)
   - [Acknowledgements](#acknowledgements)
   - [Citation](#citation)
