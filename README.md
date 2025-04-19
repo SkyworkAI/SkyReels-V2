@@ -2,7 +2,7 @@
   <img src="assets/logo2.png" alt="SkyReels Logo" width="50%">
 </p>
 
-# SkyReels V2: Infinite-Length Film Generative Model
+<h1 align="center">SkyReels V2: Infinite-Length Film Generative Model</h1> 
 
 <p align="center">
 🤗 <a href="https://huggingface.co/collections/Skywork/skyreels-v2-6801b1b93df627d441d0d0d9" target="_blank">Hugging Face</a> · 👋 <a href="https://www.skyreels.ai/home?utm_campaign=github_V2" target="_blank">Playground</a> · 💬 <a href="https://discord.gg/PwM6NYtccQ" target="_blank">Discord</a> · 📑 <a href="https://arxiv.org/pdf/2504.13074">Technical Report</a>
@@ -255,6 +255,7 @@ Below are the key parameters you can customize for video generation:
 #### Multi-GPU inference using xDiT USP
 
 We use [xDiT](https://github.com/xdit-project/xDiT) USP to accelerate inference.  For example, to generate a video with 2 GPUs, you can use the following command:
+- **Diffusion Forcing**
 ```shell
 model_id=Skywork/SkyReels-V2-DF-14B-540P
 # diffusion forcing synchronous inference
@@ -271,7 +272,7 @@ torchrun --nproc_per_node=2 generate_video_df.py \
   --offload \
   --seed 42
 ```
-
+- **Text To Video & Image To Video**
 ```shell
 # run Text-to-Video Generation
 model_id=Skywork/SkyReels-V2-T2V-14B-540P
