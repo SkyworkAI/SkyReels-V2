@@ -15,9 +15,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--outdir", type=str, default="diffusion_forcing")
     parser.add_argument("--model_id", type=str, default="Skywork/SkyReels-V2-DF-1.3B-540P")
-    # parser.add_argument("--resolution", type=int, default=540, choices=[540, 720])
-    parser.add_argument("--height", type=int, default=544)
-    parser.add_argument("--width", type=int, default=960)
+    parser.add_argument("--resolution", type=str, choices=["540P", "720P"])
     parser.add_argument("--num_frames", type=int, default=97)
     parser.add_argument("--image", type=str, default=None)
     parser.add_argument("--ar_step", type=int, default=0)
@@ -26,8 +24,8 @@ if __name__ == "__main__":
     parser.add_argument("--base_num_frames", type=int, default=97)
     parser.add_argument("--overlap_history", type=int, default=None)
     parser.add_argument("--addnoise_condition", type=int, default=0)
-    parser.add_argument("--guidance_scale", type=float, default=None)
-    parser.add_argument("--shift", type=float, default=None)
+    parser.add_argument("--guidance_scale", type=float, default=6.0)
+    parser.add_argument("--shift", type=float, default=8.0)
     parser.add_argument("--inference_steps", type=int, default=30)
     parser.add_argument("--use_usp", action="store_true")
     parser.add_argument("--offload", action="store_true")
@@ -45,7 +43,18 @@ if __name__ == "__main__":
     if args.seed == -1:
         random.seed(time.time())
         args.seed = int(random.randrange(4294967294))
-    height, width, num_frames, fps = args.height, args.width, args.num_frames, args.fps
+    
+    if args.resolution == "540P":
+        height = 544
+        width = 960
+    elif args.resolution == "720P":
+        height = 720
+        width = 1280
+    else:
+        raise ValueError(f"Invalid resolution: {args.resolution}")
+
+    num_frames = args.num_frames
+    fps = args.fps
 
     if num_frames > args.base_num_frames:
         assert (
@@ -56,10 +65,8 @@ if __name__ == "__main__":
             f'You have set "addnoise_condition" as {args.addnoise_condition}. The value is too large which can cause inconsistency in long video generation. The value is recommanded to set 20.'
         )
 
-    guidance_scale = 6.0
-    shift = 8.0
-    guidance_scale = guidance_scale if args.guidance_scale is None else args.guidance_scale
-    shift = shift if args.shift is None else args.shift
+    guidance_scale = args.guidance_scale
+    shift = args.shift
     image = load_image(args.image).convert("RGB") if args.image else None
     negative_prompt = "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走"
 

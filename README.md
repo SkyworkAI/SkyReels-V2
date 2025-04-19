@@ -181,8 +181,7 @@ model_id=Skywork/SkyReels-V2-DF-14B-540P
 # synchronous inference
 python3 generate_video_df.py \
   --model_id ${model_id} \
-  --height 544 \
-  --width 960 \
+  --resolution 540P \
   --ar_step 0 \
   --base_num_frames 97 \
   --num_frames 257 \
@@ -204,8 +203,7 @@ python3 generate_video_df.py \
 model_id=Skywork/SkyReels-V2-T2V-14B-540P
 python3 generate_video.py \
   --model_id ${model_id} \
-  --height 544 \
-  --width 960 \
+  --resolution 540P \
   --num_frames 97 \
   --guidance_scale 6.0 \
   --shift 8.0 \
@@ -258,8 +256,7 @@ model_id=Skywork/SkyReels-V2-DF-14B-540P
 # diffusion forcing synchronous inference
 torchrun --nproc_per_node=2 generate_video_df.py \
   --model_id ${model_id} \
-  --height 544 \
-  --width 960 \
+  --resolution 540P \
   --ar_step 0 \
   --base_num_frames 97 \
   --num_frames 257 \
@@ -275,8 +272,7 @@ torchrun --nproc_per_node=2 generate_video_df.py \
 model_id=Skywork/SkyReels-V2-T2V-14B-540P
 torchrun --nproc_per_node=2 generate_video.py \
   --model_id ${model_id} \
-  --height 544 \
-  --width 960 \
+  --resolution 540P \
   --num_frames 97 \
   --guidance_scale 6.0 \
   --shift 8.0 \

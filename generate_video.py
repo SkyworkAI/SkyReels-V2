@@ -30,8 +30,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--outdir", type=str, default="video_out")
     parser.add_argument("--model_id", type=str, default="Skywork/SkyReels-V2-T2V-1.3B-540P")
-    parser.add_argument("--height", type=int, default=544)
-    parser.add_argument("--width", type=int, default=960)
+    parser.add_argument("--resolution", type=str, choices=["540P", "720P"])
     parser.add_argument("--num_frames", type=int, default=97)
     parser.add_argument("--image", type=str, default=None)
     parser.add_argument("--guidance_scale", type=float, default=6.0)
@@ -53,6 +52,15 @@ if __name__ == "__main__":
     if args.seed == -1:
         random.seed(time.time())
         args.seed = int(random.randrange(4294967294))
+
+    if args.resolution == "540P":
+        height = 544
+        width = 960
+    elif args.resolution == "720P":
+        height = 720
+        width = 1280
+    else:
+        raise ValueError(f"Invalid resolution: {args.resolution}")
 
     image = load_image(args.image).convert("RGB") if args.image else None
     negative_prompt = "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
@@ -104,13 +112,12 @@ if __name__ == "__main__":
         "guidance_scale": args.guidance_scale,
         "shift": args.shift,
         "generator": torch.Generator(device="cuda").manual_seed(args.seed),
+        "height": height,
+        "width": width,
     }
-    if image is None:
-        kwargs["height"] = args.height
-        kwargs["width"] = args.width
-    else:
+        
+    if image is not None:
         kwargs["image"] = load_image(args.image).convert("RGB")
-        kwargs["max_area"] = args.height * args.width
 
     save_dir = os.path.join("result", args.outdir)
     os.makedirs(save_dir, exist_ok=True)
