@@ -65,7 +65,7 @@ You can download our models from Hugging Face:
     <tr>
       <th>Type</th>
       <th>Model Variant</th>
-      <th>Height/Width/Frame</th>
+      <th>Recommended Height/Width/Frame</th>
       <th>Link</th>
     </tr>
   </thead>
