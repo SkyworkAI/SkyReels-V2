@@ -218,6 +218,7 @@ python3 generate_video.py \
 > - You can use `--prompt_enhance` to expand the prompt into a more detailed description, which is only supported for text-to-video.
 
 - **Prompt Rewriter**
+
 The prompt rewriter is implemented based on <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct">Qwen2.5-32B-Instruct</a> and  is utilized via the `--prompt_enhance` parameter. It works ideally for short prompts, while for long prompts, it might generate an excessively lengthy prompt that could lead to over-saturation in the generative video.
 
 **Advanced Configuration Options**
