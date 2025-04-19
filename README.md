@@ -64,8 +64,7 @@ You can download our models from Hugging Face:
   <thead>
     <tr>
       <th>Type</th>
-      <th>Model Size</th>
-      <th>Resolution</th>
+      <th>Model Variant</th>
       <th>Height/Width/Frame</th>
       <th>Link</th>
     </tr>
@@ -73,106 +72,95 @@ You can download our models from Hugging Face:
   <tbody>
     <tr>
       <td rowspan="5">Diffusion Forcing</td>
-      <td>1.3B</td>
-      <td>540P</td>
+      <td>1.3B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-1.3B">ModelScope</a></td>
     </tr>
     <tr>
-      <td rowspan="2">5B</td>
-      <td>540P</td>
+      <td>5B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>5B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td rowspan="2">14B</td>
-      <td>540P</td>
+      <td>14B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>14B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-DF-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-DF-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="5">Text-to-Video</td>
-      <td>1.3B</td>
-      <td>540P</td>
+      <td>1.3B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-1.3B">ModelScope</a></td>
     </tr>
     <tr>
-      <td rowspan="2">5B</td>
-      <td>540P</td>
+      <td>5B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>5B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td rowspan="2">14B</td>
-      <td>540P</td>
+      <td>14B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>14B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-T2V-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-T2V-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="5">Image-to-Video</td>
-      <td>1.3B</td>
-      <td>540P</td>
+      <td>1.3B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-1.3B">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-1.3B">ModelScope</a></td>
     </tr>
     <tr>
-      <td rowspan="2">5B</td>
-      <td>540P</td>
+      <td>5B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>5B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td rowspan="2">14B</td>
-      <td>540P</td>
+      <td>14B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-540P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-14B-540P">ModelScope</a></td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>14B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>🤗 <a href="https://huggingface.co/SkyworkAI/SkyReels-V2-I2V-14B-720P">Huggingface</a> 🤖 <a href="https://www.modelscope.cn/SkyworkAI/SkyReels-V2-I2V-14B-720P">ModelScope</a></td>
     </tr>
     <tr>
       <td rowspan="3">Camera Director</td>
-      <td rowspan="2">5B</td>
-      <td>540P</td>
+      <td>5B-540P</td>
       <td>544 * 960 * 97f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td>720P</td>
+      <td>5B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>Coming Soon</td>
     </tr>
     <tr>
-      <td>14B</td>
-      <td>720P</td>
+      <td>14B-720P</td>
       <td>720 * 1280 * 121f</td>
       <td>Coming Soon</td>
     </tr>
