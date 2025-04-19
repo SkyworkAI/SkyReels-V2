@@ -1,7 +1,7 @@
 # SkyCaptioner-V1: A Structured Video Captioning Model
 
 <p align="center">
-🤗 <a href="https://huggingface.co/Skywork/SkyCaptioner-V1" target="_blank">Hugging Face</a> · 💬 <a href="https://discord.gg/PwM6NYtccQ" target="_blank">Discord</a>
+🤗 <a href="https://huggingface.co/Skywork/SkyCaptioner-V1" target="_blank">Hugging Face</a> 🤖 <a href="https://modelscope.cn/organization/Skywork">ModelScope</a> · 👋 <a href="https://www.skyreels.ai/home?utm_campaign=github_V2" target="_blank">Playground</a> · 💬 <a href="https://discord.gg/PwM6NYtccQ" target="_blank">Discord</a> · 📑 <a href="https://arxiv.org/pdf/2504.13074">Technical Report</a>
 </p>
 
 ---
@@ -24,9 +24,9 @@ Welcome to the SkyCaptioner-V1 repository! Here, you'll find the structural capt
 
 ## 🌟 Overview
 
-SkyCaptioner-V1 is a unified video captioning model designed to generate high-quality, structured descriptions for video data. It integrates specialized sub-expert models and multimodal large language models (MLLMs) to address the limitations of general captioners in capturing professional film-related details. Key aspects include:
+SkyCaptioner-V1 is a structured video captioning model designed to generate high-quality, structured descriptions for video data. It integrates specialized sub-expert models and multimodal large language models (MLLMs) with human annotations to address the limitations of general captioners in capturing professional film-related details. Key aspects include:
 
-1. ​​**Structural Representation**​: Combines general video descriptions (from MLLMs) with expert-level annotations (e.g., shot types, camera motions).
+1. ​​**Structural Representation**​: Combines general video descriptions (from MLLMs) with sub-expert captioner and human annotations (e.g., shot types, camera motions.).
 2. ​​**Knowledge Distillation**​: Distills expertise from sub-expert captioners into a unified model.
 3. ​​**Application Flexibility**​: Generates dense captions for text-to-video (T2V) and concise prompts for image-to-video (I2V) tasks.
 
@@ -249,7 +249,7 @@ We would like to thank the contributors of <a href="https://github.com/QwenLM/Qw
 ## Citation
 
 ```bibtex
-@misc{SkyReelsV2,
+@misc{chen2025skyreelsv2infinitelengthfilmgenerative,
 author = {Guibin Chen and Dixuan Lin and Jiangping Yang and Chunze Lin and Juncheng Zhu and Mingyuan Fan and Hao Zhang and Sheng Chen and Zheng Chen and Chengchen Ma and Weiming Xiong and Wei Wang and Nuo Pang and Kang Kang and Zhiheng Xu and Yuzhe Jin and Yupeng Liang and Yubing Song and Peng Zhao and Boyuan Xu and Di Qiu and Debang Li and Zhengcong Fei and Yang Li and Yahui Zhou},
 title = {Skyreels V2:Infinite-Length Film Generative Model},
 year = {2025},
