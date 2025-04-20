@@ -194,7 +194,7 @@ python3 generate_video_df.py \
 > - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded.
 > - `--addnoise_condition 20` is recommanded to add for better long video consistency.
 > - To reduce peak VRAM, lower the `--base_num_frames` for the same generative length `--num_frames`. This may slightly reduce video quality.
-> - You can use `--prompt_enhance` to expand the prompt into a more detailed description, which is only supported for text-to-video.
+> - You can use `--prompt_enhancer` to expand the prompt into a more detailed description, which is only supported for text-to-video.
 
 - **Text To Video & Image To Video**
 
@@ -237,7 +237,7 @@ Below are the key parameters you can customize for video generation:
 | --offload | True | Offloads model components to CPU to reduce VRAM usage (recommended) |
 | --use_usp | True | Enables multi-GPU acceleration with xDiT USP |
 | --outdir | ./video_out | Directory where generated videos will be saved |
-| --prompt_enhance | True | expand the prompt into a more detailed description |
+| --prompt_enhancer | True | expand the prompt into a more detailed description |
 
 **Diffusion Forcing Additional Parameters**
 | Parameter | Recommended Value | Description |
