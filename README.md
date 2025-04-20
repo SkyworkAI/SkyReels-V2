@@ -186,7 +186,8 @@ python3 generate_video_df.py \
   --base_num_frames 97 \
   --num_frames 257 \
   --overlap_history 17 \
-  --prompt "A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface." \
+  --prompt "A graceful white swan with a curved neck and delicate feathers swimming in a serene lake at dawn, its reflection perfectly mirrored in the still water as mist rises from the surface, with the swan occasionally dipping its head into the water to feed." \
+  --addnoise_condition 20 \
   --offload
 ```
 > **Note**: 
