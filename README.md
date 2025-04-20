@@ -52,8 +52,8 @@ The demos above showcase 30-second videos generated using our SkyReels-V2 Diffus
 #### Installation
 ```shell
 # clone the repository.
-git clone https://github.com/SkyworkAI/Skyreels-V2
-cd Skyreels-V2
+git clone https://github.com/SkyworkAI/SkyReels-V2
+cd SkyReels-V2
 # Install dependencies. Test environment uses Python 3.10.12.
 pip install -r requirements.txt
 ```
