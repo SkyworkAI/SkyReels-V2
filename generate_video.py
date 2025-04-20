@@ -9,7 +9,7 @@ from diffusers.utils import load_image
 
 from skyreels_v2_infer.pipelines import Image2VideoPipeline
 from skyreels_v2_infer.pipelines import Text2VideoPipeline
-from skyreels_v2_infer.pipelines import PromptRewriter
+from skyreels_v2_infer.pipelines import PromptEnhancer
 
 MODEL_ID_CONFIG = {
     "text2video": [
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         type=str,
         default="A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface.",
     )
-    parser.add_argument("--prompt_enhance", action="store_true")
+    parser.add_argument("--prompt_enhancer", action="store_true")
     args = parser.parse_args()
 
     assert (args.use_usp and args.seed is not None) or (not args.use_usp), "usp mode need seed"
@@ -82,9 +82,9 @@ if __name__ == "__main__":
             ulysses_degree=dist.get_world_size(),
         )
 
-    if args.prompt_enhance and args.image is None:
-        print(f'init prompt rewriter')
-        prompt_rewriter = PromptRewriter()
+    if args.prompt_enhancer and args.image is None:
+        print(f'init prompt enhancer')
+        prompt_enhancer = PromptEnhancer()
 
     if image is None:
         assert "T2V" in args.model_id, f"check model_id:{args.model_id}"
@@ -100,9 +100,9 @@ if __name__ == "__main__":
         )
     
     prompt_input = args.prompt
-    if args.prompt_enhance and image is not None:
-        prompt_input = prompt_rewriter(prompt_input)
-        print(f'rewritten prompt: {prompt_input}')
+    if args.prompt_enhancer and image is not None:
+        prompt_input = prompt_enhancer(prompt_input)
+        print(f'enhanced prompt: {prompt_input}')
 
     kwargs = {
         "prompt": prompt_input,

@@ -8,7 +8,7 @@ import torch
 from diffusers.utils import load_image
 
 from skyreels_v2_infer import DiffusionForcingPipeline
-from skyreels_v2_infer.pipelines import PromptRewriter
+from skyreels_v2_infer.pipelines import PromptEnhancer
 
 if __name__ == "__main__":
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         type=str,
         default="A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface.",
     )
-    parser.add_argument("--prompt_enhance", action="store_true")
+    parser.add_argument("--prompt_enhancer", action="store_true")
     args = parser.parse_args()
 
     assert (args.use_usp and args.seed is not None) or (not args.use_usp), "usp mode need seed"
@@ -90,8 +90,8 @@ if __name__ == "__main__":
             ulysses_degree=dist.get_world_size(),
         )
 
-    if args.prompt_enhance and args.image is None:
-        prompt_rewriter = PromptRewriter()
+    if args.prompt_enhancer and args.image is None:
+        prompt_enhancer = PromptEnhancer()
 
     pipe = DiffusionForcingPipeline(
         args.model_id,
@@ -109,9 +109,9 @@ if __name__ == "__main__":
     print(f"guidance_scale:{guidance_scale}")
 
     prompt_input = args.prompt
-    if args.prompt_enhance and args.image is None:
-        prompt_input = prompt_rewriter(prompt_input)
-        print(f"rewritten prompt: {prompt_input}")
+    if args.prompt_enhancer and args.image is None:
+        prompt_input = prompt_enhancer(prompt_input)
+        print(f"enhanced prompt: {prompt_input}")
 
     with torch.cuda.amp.autocast(dtype=pipe.transformer.dtype), torch.no_grad():
         video_frames = pipe(

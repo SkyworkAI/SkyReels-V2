@@ -21,7 +21,7 @@ Note: If the subject is stationary, incorporate camera movement to ensure the ge
 ​​Now expand this short prompt:​​ [{}]. Please only output the final long prompt in English.
 """
 
-class PromptRewriter:
+class PromptEnhancer:
     def __init__(self, model_name="Qwen/Qwen2.5-32B-Instruct"):
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
@@ -54,8 +54,8 @@ class PromptRewriter:
         return rewritten_prompt
 
 if __name__ == '__main__':
-    prompt_rewriter = PromptRewriter()
+    prompt_enhancer = PromptEnhancer()
     prompt = "In a still frame, a stop sign"
-    rewritten_prompt = prompt_rewriter(prompt)
+    enhanced_prompt = prompt_enhancer(prompt)
     print(f'Original prompt: {prompt}')
-    print(f'Rewritten prompt: {rewritten_prompt}')
+    print(f'Enhanced prompt: {enhanced_prompt}')
