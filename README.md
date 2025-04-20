@@ -190,11 +190,11 @@ python3 generate_video_df.py \
   --offload
 ```
 > **Note**: 
-> - If you want to run the DF model for **image-to-video (I2V)** tasks, add `--image ${image_path}` to your command.
+> - Diffusion Forcing supports both **text-to-video (T2V)** and **image-to-video (I2V)** tasks. If you want to run the **image-to-video (I2V)** task, add `--image ${image_path}` to your command.
 > - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded.
 > - `--addnoise_condition 20` is recommanded to add for better long video consistency.
 > - To reduce peak VRAM, lower the `--base_num_frames` for the same generative length `--num_frames`. This may slightly reduce video quality.
-> - You can use `--prompt_enhancer` to expand the prompt into a more detailed description, which is only supported for text-to-video.
+> - You can use `--prompt_enhancer` to expand the prompt into a more detailed description, which is only supported for **text-to-video (T2V)**.
 
 - **Text To Video & Image To Video**
 
