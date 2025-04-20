@@ -213,7 +213,7 @@ python3 generate_video.py \
 ```
 > **Note**: 
 > - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter.
-> - You can use `--prompt_enhancer` to expand the prompt into a more detailed description, which is only supported for text-to-video.
+> - You can use `--prompt_enhancer` to expand the prompt into a more detailed description, which is only supported for **text-to-video (T2V)**.
 
 - **Prompt Enhancer**
 
