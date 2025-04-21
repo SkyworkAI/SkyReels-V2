@@ -1,4 +1,3 @@
-import math
 import os
 from typing import List
 from typing import Optional
@@ -68,6 +67,7 @@ class Text2VideoPipeline:
         context_null = self.text_encoder.encode(negative_prompt).to(self.device)
         if self.offload:
             self.text_encoder.cpu()
+            torch.cuda.empty_cache()
 
         latents = [
             torch.randn(

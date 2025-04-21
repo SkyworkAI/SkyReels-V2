@@ -6,7 +6,7 @@ results/*
 results/*
 *.png
 *.jpg
-# *.mp4
+*.mp4
 *.log*
 *.json
 scripts/transformer/*

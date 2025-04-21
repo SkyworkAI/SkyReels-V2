@@ -218,6 +218,7 @@ class DiffusionForcingPipeline:
             negative_prompt_embeds = self.text_encoder.encode(negative_prompt).to(self.transformer.dtype)
         if self.offload:
             self.text_encoder.cpu()
+            torch.cuda.empty_cache()
 
         self.scheduler.set_timesteps(num_inference_steps, device=prompt_embeds.device, shift=shift)
         init_timesteps = self.scheduler.timesteps

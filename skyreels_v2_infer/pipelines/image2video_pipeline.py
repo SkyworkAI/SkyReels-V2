@@ -83,6 +83,7 @@ class Image2VideoPipeline:
         clip_context = self.clip.encode_video(img)
         if self.offload:
             self.clip.cpu()
+            torch.cuda.empty_cache()
 
         # preprocess
         self.text_encoder.to(self.device)
@@ -90,6 +91,7 @@ class Image2VideoPipeline:
         context_null = self.text_encoder.encode(negative_prompt).to(self.device)
         if self.offload:
             self.text_encoder.cpu()
+            torch.cuda.empty_cache()
 
         latent = torch.randn(
             16, latent_length, latent_height, latent_width, dtype=torch.float32, generator=generator, device=self.device

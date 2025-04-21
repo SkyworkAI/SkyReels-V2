@@ -1,6 +1,6 @@
 import argparse
-import os
 import gc
+import os
 import random
 import time
 
@@ -9,6 +9,7 @@ import torch
 from diffusers.utils import load_image
 
 from skyreels_v2_infer import DiffusionForcingPipeline
+from skyreels_v2_infer.modules import download_model
 from skyreels_v2_infer.pipelines import PromptEnhancer
 
 if __name__ == "__main__":
@@ -40,11 +41,14 @@ if __name__ == "__main__":
     parser.add_argument("--prompt_enhancer", action="store_true")
     args = parser.parse_args()
 
+    args.model_id = download_model(args.model_id)
+    print("model_id:", args.model_id)
+
     assert (args.use_usp and args.seed is not None) or (not args.use_usp), "usp mode need seed"
     if args.seed == -1:
         random.seed(time.time())
         args.seed = int(random.randrange(4294967294))
-    
+
     if args.resolution == "540P":
         height = 544
         width = 960
@@ -93,10 +97,10 @@ if __name__ == "__main__":
 
     prompt_input = args.prompt
     if args.prompt_enhancer and args.image is None:
-        print(f'init prompt enhancer')
+        print(f"init prompt enhancer")
         prompt_enhancer = PromptEnhancer()
         prompt_input = prompt_enhancer(prompt_input)
-        print(f'enhanced prompt: {prompt_input}')
+        print(f"enhanced prompt: {prompt_input}")
         del prompt_enhancer
         gc.collect()
         torch.cuda.empty_cache()
