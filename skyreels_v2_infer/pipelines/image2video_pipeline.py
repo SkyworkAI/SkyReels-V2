@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from diffusers.image_processor import PipelineImageInput
 from diffusers.video_processor import VideoProcessor
+from PIL import Image
 from tqdm import tqdm
 
 from ..modules import get_image_encoder
@@ -14,6 +15,24 @@ from ..modules import get_text_encoder
 from ..modules import get_transformer
 from ..modules import get_vae
 from ..scheduler.fm_solvers_unipc import FlowUniPCMultistepScheduler
+
+
+def resizecrop(image: Image.Image, th, tw):
+    w, h = image.size
+    if w == tw and h == th:
+        return image
+    if h / w > th / tw:
+        new_w = int(w)
+        new_h = int(new_w * th / tw)
+    else:
+        new_h = int(h)
+        new_w = int(new_h * tw / th)
+    left = (w - new_w) / 2
+    top = (h - new_h) / 2
+    right = (w + new_w) / 2
+    bottom = (h + new_h) / 2
+    image = image.crop((left, top, right, bottom))
+    return image
 
 
 class Image2VideoPipeline:

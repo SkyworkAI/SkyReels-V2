@@ -11,6 +11,7 @@ from diffusers.utils import load_image
 from skyreels_v2_infer.modules import download_model
 from skyreels_v2_infer.pipelines import Image2VideoPipeline
 from skyreels_v2_infer.pipelines import PromptEnhancer
+from skyreels_v2_infer.pipelines import resizecrop
 from skyreels_v2_infer.pipelines import Text2VideoPipeline
 
 MODEL_ID_CONFIG = {
@@ -109,6 +110,11 @@ if __name__ == "__main__":
         pipe = Image2VideoPipeline(
             model_path=args.model_id, dit_path=args.model_id, use_usp=args.use_usp, offload=args.offload
         )
+        args.image = load_image(args.image)
+        image_width, image_height = args.image.size
+        if image_height > image_width:
+            height, width = width, height
+        args.image = resizecrop(args.image, height, width)
 
     prompt_input = args.prompt
     if args.prompt_enhancer and image is not None:
@@ -128,7 +134,7 @@ if __name__ == "__main__":
     }
 
     if image is not None:
-        kwargs["image"] = load_image(args.image).convert("RGB")
+        kwargs["image"] = args.image.convert("RGB")
 
     save_dir = os.path.join("result", args.outdir)
     os.makedirs(save_dir, exist_ok=True)
