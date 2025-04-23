@@ -39,6 +39,16 @@ if __name__ == "__main__":
         default="A woman in a leather jacket and sunglasses riding a vintage motorcycle through a desert highway at sunset, her hair blowing wildly in the wind as the motorcycle kicks up dust, with the golden sun casting long shadows across the barren landscape.",
     )
     parser.add_argument("--prompt_enhancer", action="store_true")
+    parser.add_argument("--teacache", action="store_true")
+    parser.add_argument(
+        "--teacache_thresh",
+        type=float,
+        default=0.2,
+        help="Higher speedup will cause to worse quality -- 0.1 for 2.0x speedup -- 0.2 for 3.0x speedup")
+    parser.add_argument(
+        "--use_ret_steps",
+        action="store_true",
+        help="Using Retention Steps will result in faster generation speed and better generation quality.")
     args = parser.parse_args()
 
     args.model_id = download_model(args.model_id)
@@ -117,6 +127,16 @@ if __name__ == "__main__":
 
     if args.causal_attention:
         pipe.transformer.set_ar_attention(args.causal_block_size)
+    
+    if args.teacache:
+        if args.ar_step > 0:
+            num_steps = args.inference_steps + (((args.base_num_frames - 1)//4 + 1) // args.causal_block_size - 1) * args.ar_step
+            print('num_steps:', num_steps)
+        else:
+            num_steps = args.inference_steps
+        pipe.transformer.initialize_teacache(enable_teacache=True, num_steps=num_steps, 
+                                             teacache_thresh=args.teacache_thresh, use_ret_steps=args.use_ret_steps, 
+                                             ckpt_dir=args.model_id)
 
     print(f"prompt:{prompt_input}")
     print(f"guidance_scale:{guidance_scale}")

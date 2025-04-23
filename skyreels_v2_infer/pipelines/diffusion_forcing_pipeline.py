@@ -328,6 +328,9 @@ class DiffusionForcingPipeline:
                     finished_frame_num = i * (base_num_frames - overlap_history_frames) + overlap_history_frames
                     left_frame_num = latent_length - finished_frame_num
                     base_num_frames_iter = min(left_frame_num + overlap_history_frames, base_num_frames)
+                    if ar_step > 0 and self.transformer.enable_teacache:
+                        num_steps = num_inference_steps + ((base_num_frames_iter - overlap_history_frames) // causal_block_size - 1) * ar_step
+                        self.transformer.num_steps = num_steps
                 else:  # i == 0
                     base_num_frames_iter = base_num_frames
                 latent_shape = [16, base_num_frames_iter, latent_height, latent_width]

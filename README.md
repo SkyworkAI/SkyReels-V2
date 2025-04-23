@@ -191,13 +191,16 @@ python3 generate_video_df.py \
   --overlap_history 17 \
   --prompt "A graceful white swan with a curved neck and delicate feathers swimming in a serene lake at dawn, its reflection perfectly mirrored in the still water as mist rises from the surface, with the swan occasionally dipping its head into the water to feed." \
   --addnoise_condition 20 \
-  --offload
+  --offload \
+  --teacache \
+  --use_ret_steps \
+  --teacache_thresh 0.3
 ```
 
 asynchronous generation for 30s video
 ```shell
 model_id=Skywork/SkyReels-V2-DF-14B-540P
-# synchronous inference
+# asynchronous inference
 python3 generate_video_df.py \
   --model_id ${model_id} \
   --resolution 540P \
@@ -232,7 +235,10 @@ python3 generate_video.py \
   --shift 8.0 \
   --fps 24 \
   --prompt "A serene lake surrounded by towering mountains, with a few swans gracefully gliding across the water and sunlight dancing on the surface." \
-  --offload
+  --offload \
+  --teacache \
+  --use_ret_steps \
+  --teacache_thresh 0.3
 ```
 > **Note**: 
 > - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter. The `--guidance_scale 5.0` and `--shift 3.0` is recommanded for I2V model.
@@ -269,7 +275,10 @@ Below are the key parameters you can customize for video generation:
 | --offload | True | Offloads model components to CPU to reduce VRAM usage (recommended) |
 | --use_usp | True | Enables multi-GPU acceleration with xDiT USP |
 | --outdir | ./video_out | Directory where generated videos will be saved |
-| --prompt_enhancer | True | expand the prompt into a more detailed description |
+| --prompt_enhancer | True | Expand the prompt into a more detailed description |
+| --teacache | False | Enables teacache for faster inference |
+| --teacache_thresh | 0.2 | Higher speedup will cause to worse quality |
+| --use_ret_steps | False | Retention Steps for teacache |
 
 **Diffusion Forcing Additional Parameters**
 | Parameter | Recommended Value | Description |

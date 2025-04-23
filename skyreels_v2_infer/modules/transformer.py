@@ -1,6 +1,6 @@
 # Copyright 2024-2025 The Alibaba Wan Team Authors. All rights reserved.
 import math
-
+import numpy as np
 import torch
 import torch.amp as amp
 import torch.nn as nn
@@ -484,6 +484,7 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
         self.num_frame_per_block = 1
         self.flag_causal_attention = False
         self.block_mask = None
+        self.enable_teacache = False
 
         # embeddings
         self.patch_embedding = nn.Conv3d(in_dim, dim, kernel_size=patch_size, stride=patch_size)
@@ -573,6 +574,50 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
         )
 
         return block_mask
+
+    def initialize_teacache(self, enable_teacache=True, num_steps=25, teacache_thresh=0.15, use_ret_steps=False, ckpt_dir=''):
+        self.enable_teacache = enable_teacache
+        print('using teacache')
+        self.cnt = 0
+        self.num_steps = num_steps
+        self.teacache_thresh = teacache_thresh
+        self.accumulated_rel_l1_distance_even = 0
+        self.accumulated_rel_l1_distance_odd = 0
+        self.previous_e0_even = None
+        self.previous_e0_odd = None
+        self.previous_residual_even = None
+        self.previous_residual_odd = None
+        self.use_ref_steps = use_ret_steps
+        if "I2V" in ckpt_dir:
+            if use_ret_steps:
+                if '540P' in ckpt_dir:
+                    self.coefficients = [ 2.57151496e+05, -3.54229917e+04,  1.40286849e+03, -1.35890334e+01, 1.32517977e-01]
+                if '720P' in ckpt_dir:
+                    self.coefficients = [ 8.10705460e+03,  2.13393892e+03, -3.72934672e+02,  1.66203073e+01, -4.17769401e-02]
+                self.ret_steps = 5*2
+                self.cutoff_steps = num_steps*2
+            else:
+                if '540P' in ckpt_dir:
+                    self.coefficients = [-3.02331670e+02,  2.23948934e+02, -5.25463970e+01,  5.87348440e+00, -2.01973289e-01]
+                if '720P' in ckpt_dir:
+                    self.coefficients = [-114.36346466,   65.26524496,  -18.82220707,    4.91518089,   -0.23412683]
+                self.ret_steps = 1*2
+                self.cutoff_steps = num_steps*2 - 2
+        else:
+            if use_ret_steps:
+                if '1.3B' in ckpt_dir:
+                    self.coefficients = [-5.21862437e+04, 9.23041404e+03, -5.28275948e+02, 1.36987616e+01, -4.99875664e-02]
+                if '14B' in ckpt_dir:
+                    self.coefficients = [-3.03318725e+05, 4.90537029e+04, -2.65530556e+03, 5.87365115e+01, -3.15583525e-01]
+                self.ret_steps = 5*2
+                self.cutoff_steps = num_steps*2
+            else:
+                if '1.3B' in ckpt_dir:
+                    self.coefficients = [2.39676752e+03, -1.31110545e+03,  2.01331979e+02, -8.29855975e+00, 1.37887774e-01]
+                if '14B' in ckpt_dir:
+                    self.coefficients = [-5784.54975374,  5449.50911966, -1811.16591783,   256.27178429, -13.02252404]
+                self.ret_steps = 1*2
+                self.cutoff_steps = num_steps*2 - 2
 
     def forward(self, x, t, context, clip_fea=None, y=None, fps=None):
         r"""
@@ -664,13 +709,68 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
 
         # arguments
         kwargs = dict(e=e0, grid_sizes=grid_sizes, freqs=self.freqs, context=context, block_mask=self.block_mask)
-        for block in self.blocks:
-            x = block(x, **kwargs)
+        if self.enable_teacache:
+            modulated_inp = e0 if self.use_ref_steps else e
+            # teacache
+            if self.cnt%2==0: # even -> conditon
+                self.is_even = True
+                if self.cnt < self.ret_steps or self.cnt >= self.cutoff_steps:
+                    should_calc_even = True
+                    self.accumulated_rel_l1_distance_even = 0
+                else:
+                    rescale_func = np.poly1d(self.coefficients)
+                    self.accumulated_rel_l1_distance_even += rescale_func(((modulated_inp-self.previous_e0_even).abs().mean() / self.previous_e0_even.abs().mean()).cpu().item())
+                    if self.accumulated_rel_l1_distance_even < self.teacache_thresh:
+                        should_calc_even = False
+                    else:
+                        should_calc_even = True
+                        self.accumulated_rel_l1_distance_even = 0
+                self.previous_e0_even = modulated_inp.clone()
+
+            else: # odd -> unconditon
+                self.is_even = False
+                if self.cnt < self.ret_steps or self.cnt >= self.cutoff_steps:
+                    should_calc_odd = True
+                    self.accumulated_rel_l1_distance_odd = 0
+                else: 
+                    rescale_func = np.poly1d(self.coefficients)
+                    self.accumulated_rel_l1_distance_odd += rescale_func(((modulated_inp-self.previous_e0_odd).abs().mean() / self.previous_e0_odd.abs().mean()).cpu().item())
+                    if self.accumulated_rel_l1_distance_odd < self.teacache_thresh:
+                        should_calc_odd = False
+                    else:
+                        should_calc_odd = True
+                        self.accumulated_rel_l1_distance_odd = 0
+                self.previous_e0_odd = modulated_inp.clone()
+
+        if self.enable_teacache: 
+            if self.is_even:
+                if not should_calc_even:
+                    x += self.previous_residual_even
+                else:
+                    ori_x = x.clone()
+                    for block in self.blocks:
+                        x = block(x, **kwargs)
+                    self.previous_residual_even = x - ori_x
+            else:
+                if not should_calc_odd:
+                    x += self.previous_residual_odd
+                else:
+                    ori_x = x.clone()
+                    for block in self.blocks:
+                        x = block(x, **kwargs)
+                    self.previous_residual_odd = x - ori_x
+        
+        else:
+            for block in self.blocks:
+                x = block(x, **kwargs)
 
         x = self.head(x, e)
 
         # unpatchify
         x = self.unpatchify(x, grid_sizes)
+        self.cnt += 1
+        if self.cnt >= self.num_steps:
+            self.cnt = 0
         return x.float()
 
     def unpatchify(self, x, grid_sizes):
