@@ -759,7 +759,10 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
                     for block in self.blocks:
                         x = block(x, **kwargs)
                     self.previous_residual_odd = x - ori_x
-        
+
+            self.cnt += 1
+            if self.cnt >= self.num_steps:
+                self.cnt = 0
         else:
             for block in self.blocks:
                 x = block(x, **kwargs)
@@ -768,9 +771,6 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
 
         # unpatchify
         x = self.unpatchify(x, grid_sizes)
-        self.cnt += 1
-        if self.cnt >= self.num_steps:
-            self.cnt = 0
         return x.float()
 
     def unpatchify(self, x, grid_sizes):
