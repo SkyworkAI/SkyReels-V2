@@ -771,6 +771,7 @@ class WanModel(ModelMixin, ConfigMixin, PeftAdapterMixin):
 
         # unpatchify
         x = self.unpatchify(x, grid_sizes)
+
         return x.float()
 
     def unpatchify(self, x, grid_sizes):

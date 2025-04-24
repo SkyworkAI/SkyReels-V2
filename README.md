@@ -9,7 +9,7 @@
 </p>
 
 ---
-Welcome to the SkyReels V2 repository! Here, you'll find the model weights and inference code for our infinite-lenght film genetative models
+Welcome to the SkyReels V2 repository! Here, you'll find the model weights and inference code for our infinite-length film generative models
 
 
 ## 🔥🔥🔥 News!!
@@ -217,7 +217,7 @@ python3 generate_video_df.py \
 > **Note**: 
 > - If you want to run the **image-to-video (I2V)** task, add `--image ${image_path}` to your command and it is also better to use **text-to-video (T2V)**-like prompt which includes some descriptions of the first-frame image.
 > - For long video generation, you can just switch the `--num_frames`, e.g., `--num_frames 257` for 10s video, `--num_frames 377` for 15s video, `--num_frames 737` for 30s video, `--num_frames 1457` for 60s video. The number is not strictly aligned with the logical frame number for specified time duration, but it is aligned with some training parameters, which means it may perform better. When you use asynchronous inference with causal_block_size > 1, the `--num_frames` should be carefully set.
-> - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommanded while it is not supposed to be set for synchronous generation. REMEMBER that the frame latent number inputted into the model in every iteration, e.g., base frame latent number (e.g., (97-1)//4+1=25 for base_num_frames=97) and (e.g., (237-97-(97-17)x1+17-1)//4+1=20 for base_num_frames=97, num_frames=237, overlap_history=17) for the last iteration, MUST be divided by causal_block_size. If you find it too hard to calculate and set proper values, just use our recommanded setting above :). Asynchronous inference will take more steps to diffuse the whole sequence which means it will be SLOWER than synchronous mode. In our experiments, asynchronous inference may improve the instruction following and visual consistent performance.
+> - You can use `--ar_step 5` to enable asynchronous inference. When asynchronous inference, `--causal_block_size 5` is recommended while it is not supposed to be set for synchronous generation. REMEMBER that the frame latent number inputted into the model in every iteration, e.g., base frame latent number (e.g., (97-1)//4+1=25 for base_num_frames=97) and (e.g., (237-97-(97-17)x1+17-1)//4+1=20 for base_num_frames=97, num_frames=237, overlap_history=17) for the last iteration, MUST be divided by causal_block_size. If you find it too hard to calculate and set proper values, just use our recommended setting above :). Asynchronous inference will take more steps to diffuse the whole sequence which means it will be SLOWER than synchronous mode. In our experiments, asynchronous inference may improve the instruction following and visual consistent performance.
 > - To reduce peak VRAM, just lower the `--base_num_frames`, e.g., to 77 or 57, while keeping the same generative length `--num_frames` you want to generate. This may slightly reduce video quality, and it should not be set too small.
 > - `--addnoise_condition` is used to help smooth the long video generation by adding some noise to the clean condition. Too large noise can cause the inconsistency as well. 20 is a recommended value, and you may try larger ones, but it is recommended to not exceed 50.
 > - Generating a 540P video using the 1.3B model requires approximately 14.7GB peak VRAM, while the same resolution video using the 14B model demands around 51.2GB peak VRAM.
@@ -241,13 +241,13 @@ python3 generate_video.py \
   --teacache_thresh 0.3
 ```
 > **Note**: 
-> - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter. The `--guidance_scale 5.0` and `--shift 3.0` is recommanded for I2V model.
+> - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter. The `--guidance_scale 5.0` and `--shift 3.0` is recommended for I2V model.
 > - Generating a 540P video using the 1.3B model requires approximately 14.7GB peak VRAM, while the same resolution video using the 14B model demands around 43.4GB peak VRAM.
 
 
 - **Prompt Enhancer**
 
-The prompt enhancer is implemented based on <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct">Qwen2.5-32B-Instruct</a> and  is utilized via the `--prompt_enhancer` parameter. It works ideally for short prompts, while for long prompts, it might generate an excessively lengthy prompt that could lead to over-saturation in the generative video. Note the peak memory of GPU is 64G+ if use `--prompt_enhancer`. If you want obtain the enhanced prompt separately, you can also run the prompt_dehancer script separately for testing. The steps are as follows:
+The prompt enhancer is implemented based on <a href="https://huggingface.co/Qwen/Qwen2.5-32B-Instruct">Qwen2.5-32B-Instruct</a> and  is utilized via the `--prompt_enhancer` parameter. It works ideally for short prompts, while for long prompts, it might generate an excessively lengthy prompt that could lead to over-saturation in the generative video. Note the peak memory of GPU is 64G+ if you use `--prompt_enhancer`. If you want to obtain the enhanced prompt separately, you can also run the prompt_enhancer script separately for testing. The steps are as follows:
 
 ```shell
 cd skyreels_v2_infer/pipelines
@@ -326,7 +326,7 @@ torchrun --nproc_per_node=2 generate_video.py \
   --seed 42
 ```
 > **Note**: 
-> - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter. The `--guidance_scale 5.0` and `--shift 3.0` is recommanded for I2V model.
+> - When using an **image-to-video (I2V)** model, you must provide an input image using the `--image  ${image_path}` parameter. The `--guidance_scale 5.0` and `--shift 3.0` is recommended for I2V model.
 
 
 ## Contents
@@ -336,7 +336,7 @@ torchrun --nproc_per_node=2 generate_video.py \
     - [Video Captioner](#video-captioner)
     - [Reinforcement Learning](#reinforcement-learning)
     - [Diffusion Forcing](#diffusion-forcing)
-    - [Hight-Quality Supervised Fine-Tuning(SFT)](#high-quality-supervised-fine-tuning-sft)
+    - [High-Quality Supervised Fine-Tuning(SFT)](#high-quality-supervised-fine-tuning-sft)
   - [Performance](#performance)
   - [Acknowledgements](#acknowledgements)
   - [Citation](#citation)
@@ -484,7 +484,7 @@ Inspired by the previous success in LLM, we propose to enhance the performance o
 - the generative model does not handle well with large, deformable motions. 
 - the generated videos may violate the physical law.
 
-To avoid the degradation in other metrics, such as text alignment and video quality, we ensure the preference data pairs have comparable text alignment and video quality, while only the motion quality varies. This requirement poses greater challenges in obtaining preference annotations due to the inherently higher costs of human annotation. To address this challenge, we propose a semi-automatic pipeline that strategically combines automatically generated motion pairsand human annotation results. This hybrid approach not only enhances the data scale but also improves alignment with human preferences through curated quality control. Leveraging this enhanced dataset, we first train a specialized reward model to capture the generic motion quality differences between paired samples. This learned reward function subsequently guides the sample selection process for Direct Preference Optimization (DPO), enhancing the motionquality of the generative model.
+To avoid the degradation in other metrics, such as text alignment and video quality, we ensure the preference data pairs have comparable text alignment and video quality, while only the motion quality varies. This requirement poses greater challenges in obtaining preference annotations due to the inherently higher costs of human annotation. To address this challenge, we propose a semi-automatic pipeline that strategically combines automatically generated motion pairs and human annotation results. This hybrid approach not only enhances the data scale but also improves alignment with human preferences through curated quality control. Leveraging this enhanced dataset, we first train a specialized reward model to capture the generic motion quality differences between paired samples. This learned reward function subsequently guides the sample selection process for Direct Preference Optimization (DPO), enhancing the motion quality of the generative model.
 
 #### Diffusion Forcing
 
