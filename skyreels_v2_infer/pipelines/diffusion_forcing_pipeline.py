@@ -5,6 +5,7 @@ from typing import Optional
 from typing import Tuple
 from typing import Union
 
+import imageio
 import numpy as np
 import torch
 from diffusers.image_processor import PipelineImageInput
@@ -87,6 +88,26 @@ class DiffusionForcingPipeline:
             prefix_video = (prefix_video.float() / (255.0 / 2.0)) - 1.0
         prefix_video = prefix_video.to(self.device)
         prefix_video = [self.vae.encode(prefix_video.unsqueeze(0))[0]]  # [(c, f, h, w)]
+        causal_block_size = self.transformer.num_frame_per_block
+        if prefix_video[0].shape[1] % causal_block_size != 0:
+            truncate_len = prefix_video[0].shape[1] % causal_block_size
+            print("the length of prefix video is truncated for the casual block size alignment.")
+            prefix_video[0] = prefix_video[0][:, : prefix_video[0].shape[1] - truncate_len]
+        predix_video_latent_length = prefix_video[0].shape[1]
+        return prefix_video, predix_video_latent_length
+
+    def encode_video(
+        self, video: List[PipelineImageInput], height: int, width: int, num_frames: int
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+
+        # prefix_video
+        prefix_video = np.array(video).transpose(3, 0, 1, 2)
+        prefix_video = torch.tensor(prefix_video)  # .to(image_embeds.dtype).unsqueeze(1)
+        if prefix_video.dtype == torch.uint8:
+            prefix_video = (prefix_video.float() / (255.0 / 2.0)) - 1.0
+        prefix_video = prefix_video.to(self.device)
+        prefix_video = [self.vae.encode(prefix_video.unsqueeze(0))[0]]  # [(c, f, h, w)]
+        print(prefix_video[0].shape)
         causal_block_size = self.transformer.num_frame_per_block
         if prefix_video[0].shape[1] % causal_block_size != 0:
             truncate_len = prefix_video[0].shape[1] % causal_block_size
@@ -183,9 +204,10 @@ class DiffusionForcingPipeline:
     @torch.no_grad()
     def __call__(
         self,
-        prompt: Union[str, List[str]],
+        prompt,
         negative_prompt: Union[str, List[str]] = "",
         image: PipelineImageInput = None,
+        video: List[PipelineImageInput] = None,
         height: int = 480,
         width: int = 832,
         num_frames: int = 97,
@@ -199,6 +221,9 @@ class DiffusionForcingPipeline:
         ar_step: int = 5,
         causal_block_size: int = None,
         fps: int = 24,
+        local_rank: int = 0,
+        save_dir: str = "",
+        video_out_file: str = "",
     ):
         latent_height = height // 8
         latent_width = width // 8
@@ -211,9 +236,18 @@ class DiffusionForcingPipeline:
         predix_video_latent_length = 0
         if image:
             prefix_video, predix_video_latent_length = self.encode_image(image, height, width, num_frames)
+        elif video:
+            prefix_video, predix_video_latent_length = self.encode_video(video, height, width, num_frames)
 
         self.text_encoder.to(self.device)
-        prompt_embeds = self.text_encoder.encode(prompt).to(self.transformer.dtype)
+        prompt_embeds_list = []
+        if type(prompt) is list:
+            for prompt_iter in prompt:
+                prompt_embeds_list.append(self.text_encoder.encode(prompt_iter).to(self.transformer.dtype))
+        else:
+            prompt_embeds_list.append(self.text_encoder.encode(prompt).to(self.transformer.dtype))
+        prompt_embeds = prompt_embeds_list[0]
+        
         if self.do_classifier_free_guidance:
             negative_prompt_embeds = self.text_encoder.encode(negative_prompt).to(self.transformer.dtype)
         if self.offload:
@@ -316,8 +350,11 @@ class DiffusionForcingPipeline:
             n_iter = 1 + (latent_length - base_num_frames - 1) // (base_num_frames - overlap_history_frames) + 1
             print(f"n_iter:{n_iter}")
             output_video = None
-            for i in range(n_iter):
-                if output_video is not None:  # i !=0
+            for i_n_iter in range(n_iter):
+                if type(prompt) is list:
+                    if len(prompt) > i_n_iter:
+                        prompt_embeds = prompt_embeds_list[i_n_iter]
+                if output_video is not None:  # i_n_iter !=0
                     prefix_video = output_video[:, -overlap_history:].to(prompt_embeds.device)
                     prefix_video = [self.vae.encode(prefix_video.unsqueeze(0))[0]]  # [(c, f, h, w)]
                     if prefix_video[0].shape[1] % causal_block_size != 0:
@@ -325,13 +362,13 @@ class DiffusionForcingPipeline:
                         print("the length of prefix video is truncated for the casual block size alignment.")
                         prefix_video[0] = prefix_video[0][:, : prefix_video[0].shape[1] - truncate_len]
                     predix_video_latent_length = prefix_video[0].shape[1]
-                    finished_frame_num = i * (base_num_frames - overlap_history_frames) + overlap_history_frames
+                    finished_frame_num = i_n_iter * (base_num_frames - overlap_history_frames) + overlap_history_frames
                     left_frame_num = latent_length - finished_frame_num
                     base_num_frames_iter = min(left_frame_num + overlap_history_frames, base_num_frames)
                     if ar_step > 0 and self.transformer.enable_teacache:
                         num_steps = num_inference_steps + ((base_num_frames_iter - overlap_history_frames) // causal_block_size - 1) * ar_step
                         self.transformer.num_steps = num_steps
-                else:  # i == 0
+                else:  # i_n_iter == 0
                     base_num_frames_iter = base_num_frames
                 latent_shape = [16, base_num_frames_iter, latent_height, latent_width]
                 latents = self.prepare_latents(
@@ -413,7 +450,18 @@ class DiffusionForcingPipeline:
                     self.transformer.cpu()
                     torch.cuda.empty_cache()
                 x0 = latents[0].unsqueeze(0)
-                videos = [self.vae.decode(x0)[0]]
+                mid_output_video = self.vae.decode(x0)
+                videos = [mid_output_video[0]]
+                if local_rank == 0:
+                    mid_output_video = (mid_output_video / 2 + 0.5).clamp(0, 1)
+                    mid_output_video = [video for video in mid_output_video]
+                    mid_output_video = [video.permute(1, 2, 3, 0) * 255 for video in mid_output_video]
+                    mid_output_video = [video.cpu().numpy().astype(np.uint8) for video in mid_output_video]
+
+                    mid_video_out_file = f"mid_{i_n_iter}_{video_out_file}"
+                    mid_output_path = os.path.join(save_dir, mid_video_out_file)
+                    imageio.mimwrite(mid_output_path, mid_output_video[0], fps=fps, quality=8, output_params=["-loglevel", "error"])
+
                 if output_video is None:
                     output_video = videos[0].clamp(-1, 1).cpu()  # c, f, h, w
                 else:
