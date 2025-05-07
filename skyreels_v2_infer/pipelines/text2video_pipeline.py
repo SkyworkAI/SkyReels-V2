@@ -18,15 +18,99 @@ class Text2VideoPipeline:
     def __init__(
         self, model_path, dit_path, device: str = "cuda", weight_dtype=torch.bfloat16, use_usp=False, offload=False
     ):
+        # 20250423 pftq: Fixed load time by broadcasting transformer and staggering text encoder, VAE
+        import torch.distributed as dist
         load_device = "cpu" if offload else device
-        self.transformer = get_transformer(dit_path, load_device, weight_dtype)
-        vae_model_path = os.path.join(model_path, "Wan2.1_VAE.pth")
-        self.vae = get_vae(vae_model_path, device, weight_dtype=torch.float32)
-        self.text_encoder = get_text_encoder(model_path, load_device, weight_dtype)
-        self.video_processor = VideoProcessor(vae_scale_factor=16)
-        self.sp_size = 1
         self.device = device
         self.offload = offload
+
+        # 20250423 pftq: Check rank and distributed mode
+        if use_usp:
+            if not dist.is_initialized():
+                raise RuntimeError("Distributed environment must be initialized with dist.init_process_group before using use_usp=True")
+            local_rank = dist.get_rank()
+        else:
+            local_rank = 0
+
+        print(f"[Rank {local_rank}] Initializing pipeline components...")
+
+        vae_model_path = os.path.join(model_path, "Wan2.1_VAE.pth")
+        # 20250423 pftq: Load normally on single gpu
+        if not use_usp:
+            print(f"[Rank {local_rank}] Loading transformer to {load_device}...")
+            self.transformer = get_transformer(dit_path, load_device, weight_dtype, skip_weights=False)
+            print(f"[Rank {local_rank}] Loading text encoder to {load_device}...")
+            self.text_encoder = get_text_encoder(model_path, load_device, weight_dtype, skip_weights=False)
+            print(f"[Rank {local_rank}] Loading VAE...")
+            self.vae = get_vae(vae_model_path, device, weight_dtype=torch.float32)
+
+        # 20250423 pftq: Broadcast transformer from rank 0
+        if use_usp:
+            broadcast_device = "cpu" # tested to be more stable to start with cpu broadcast even if you have an H100
+            if local_rank == 0:
+                print(f"[Rank {local_rank}] Loading transformer to {broadcast_device}...")
+                self.transformer = get_transformer(dit_path, broadcast_device, weight_dtype, skip_weights=False)
+                transformer_state_dict = self.transformer.state_dict() 
+            else:
+                print(f"[Rank {local_rank}] Skipping transformer load...")
+                self.transformer = get_transformer(dit_path, broadcast_device, weight_dtype, skip_weights=True)
+                transformer_state_dict = None
+            dist.barrier()  # Ensure rank 0 loads transformer and text encoder
+            transformer_list = [transformer_state_dict]
+            print(f"[Rank {local_rank}] Broadcasting weights for transformer...")
+            dist.broadcast_object_list(transformer_list, src=0)
+            # 20250423 pftq: Load broadcasted weights on all ranks. Skip redundant load_state_dict on rank 0
+            if local_rank != 0:
+                print(f"[Rank {local_rank}] Loading broadcasted transformer...")
+                transformer_state_dict = transformer_list[0]
+                self.transformer.load_state_dict(transformer_state_dict)
+            dist.barrier() 
+            if offload:
+                print(f"[Rank {local_rank}] Moving transformer to cpu...")
+                self.transformer.cpu()
+            else:
+                print(f"[Rank {local_rank}] Moving transformer to {device}...")
+                self.transformer.to(device)
+            dist.barrier() 
+            torch.cuda.empty_cache()
+            
+            # 20250423 pftq: Broadcast text encoder weights from rank 0
+            if local_rank == 0:
+                print(f"[Rank {local_rank}] Loading text encoder to {broadcast_device}...")
+                self.text_encoder = get_text_encoder(model_path, broadcast_device, weight_dtype, skip_weights=False)
+                text_encoder_state_dict = self.text_encoder.state_dict() 
+            else:
+                print(f"[Rank {local_rank}] Skipping text encoder load...")
+                self.text_encoder = get_text_encoder(model_path, broadcast_device, weight_dtype, skip_weights=True)
+                text_encoder_state_dict = None
+            dist.barrier()  # Ensure rank 0 loads transformer and text encoder
+            print(f"[Rank {local_rank}] Broadcasting weights for text encoder...")
+            text_encoder_list = [text_encoder_state_dict]
+            dist.broadcast_object_list(text_encoder_list, src=0)
+            # 20250423 pftq: Load broadcasted weights on all ranks. Skip redundant load_state_dict on rank 0
+            if local_rank != 0:
+                print(f"[Rank {local_rank}] Loading broadcasted text encoder...")
+                text_encoder_state_dict = text_encoder_list[0]
+                self.text_encoder.load_state_dict(text_encoder_state_dict)
+            dist.barrier() 
+            if offload:
+                print(f"[Rank {local_rank}] Moving text encoder to cpu...")
+                self.text_encoder.cpu()
+            else:
+                print(f"[Rank {local_rank}] Moving text encoder to {device}...")
+                self.text_encoder.to(device)
+            dist.barrier() 
+            torch.cuda.empty_cache()
+
+            # 20250423 pftq: Stagger VAE loading across ranks
+            for rank in range(dist.get_world_size()):
+                if local_rank == rank:
+                    print(f"[Rank {local_rank}] Loading VAE...")
+                    self.vae = get_vae(vae_model_path, device, weight_dtype=torch.float32)
+                dist.barrier()  
+
+        self.video_processor = VideoProcessor(vae_scale_factor=16)
+        self.sp_size = 1
         if use_usp:
             from xfuser.core.distributed import get_sequence_parallel_world_size
             from ..distributed.xdit_context_parallel import usp_attn_forward, usp_dit_forward
@@ -34,8 +118,9 @@ class Text2VideoPipeline:
 
             for block in self.transformer.blocks:
                 block.self_attn.forward = types.MethodType(usp_attn_forward, block.self_attn)
+                # 20250423 pftq: Fixed indentation and removed duplicate forward assignment
                 self.transformer.forward = types.MethodType(usp_dit_forward, self.transformer)
-                self.sp_size = get_sequence_parallel_world_size()
+            self.sp_size = get_sequence_parallel_world_size()
 
         self.scheduler = FlowUniPCMultistepScheduler()
         self.vae_stride = (4, 8, 8)

@@ -425,6 +425,7 @@ class T5EncoderModel(ModelMixin):
         tokenizer_path=None,
         text_len=512,
         shard_fn=None,
+        weights_only=False,  # 20250423 pftq: Added for torch.load
     ):
         self.text_len = text_len
         self.checkpoint_path = checkpoint_path
@@ -433,8 +434,12 @@ class T5EncoderModel(ModelMixin):
         super().__init__()
         # init model
         model = umt5_xxl(encoder_only=True, return_tokenizer=False)
-        logging.info(f"loading {checkpoint_path}")
-        model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
+        # 20250423 pftq: Load weights only if checkpoint_path is provided
+        if checkpoint_path:
+            logging.info(f"loading {checkpoint_path}")
+            model.load_state_dict(
+                torch.load(checkpoint_path, map_location="cpu", weights_only=weights_only)
+            )
         self.model = model
         if shard_fn is not None:
             self.model = shard_fn(self.model, sync_module_states=False)

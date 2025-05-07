@@ -1,3 +1,98 @@
+## Changes from pftq:
+- **Added seed synchronization code to allow random seed with multi-GPU** (https://github.com/SkyworkAI/SkyReels-V2/issues/24).
+- **Reduced 20-min+ load time on multi-GPU to ~8min** by fixing contention (all GPUs loading models at once). Indirectly also solved CPU RAM spike during multi-GPU (>200GB on 4 GPUs) (https://github.com/SkyworkAI/SkyReels-V2/issues/28).
+- **Fixed CuSolver error** that occasionally comes up in multi-GPU by presetting linear algebra library (https://github.com/SkyworkAI/SkyReels-V2/issues/37).
+- **Added batch_size** parameter to allow multiple videos to generate without reloading the model, which takes about 20 min on multi-gpu so this saves a lot of time.
+- **Added preserve_image_aspect_ratio** parameter to allow preserving original image aspect ratio.
+- Fixed DF script not resize-cropping the image (I2V script does it but DF is missing the code).
+- Exposed negative_prompt to allow that to be changed/overwritten.
+- Friendlier filenames with date, seed, cfg, steps, and other details in front.
+
+## Additional changes from chaojie's fork (https://github.com/SkyworkAI/SkyReels-V2/pull/12):
+- **Multiple prompts**, allow multiple text strings in the --prompt parameter to guide the video differently each chunk of base_num_frames.
+- **Video input** via --video parameter, allow continuing/extending from a video.
+- **Partially complete videos saved** as each chunk of base_num_frames completes.  In combination with the --video parameter, this lets you effectively resume from a previous render as well as abort mid-render if the videos take a turn you don't like.  Extremely useful for saving time and "watching" as the renders complete rather than committing the full time.
+
+Example prompts below.  If you run into memory/vram issues, you can reduce the base_num_frames while still having the same higher number on num_frames.  The point of the DF model is that now the whole video doesn't have to fit in VRAM and can be done in chunks.
+
+Multi-GPU with video input and prompt travel, batch of 10, preserving aspect ratio. 
+Change --video "video.mp4" to --image "image.jpg" if you want to load a starting image instead.
+```
+model_id=Skywork/SkyReels-V2-DF-14B-540P
+gpu_count=2
+torchrun --nproc_per_node=${gpu_count} generate_video_df.py \
+  --model_id ${model_id} \
+  --resolution 540P \
+  --ar_step 0 \
+  --base_num_frames 97 \
+  --num_frames 289 \
+  --overlap_history 17 \
+  --inference_steps 50 \
+  --guidance_scale 6 \
+  --batch_size 10 \
+  --preserve_image_aspect_ratio \
+  --video "video.mp4" \
+  --prompt "The first thing he does" \
+  "The second thing he does." \
+  "The third thing he does." \
+  --negative_prompt "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards" \
+  --addnoise_condition 20 \
+  --use_ret_steps \
+  --teacache_thresh 0.0 \
+  --use_usp \
+  --offload
+```
+
+Single GPU with video input and prompt travel, batch of 10, preserving aspect ratio. 
+Change --video "video.mp4" to --image "image.jpg" if you want to load a starting image instead.
+```
+model_id=Skywork/SkyReels-V2-DF-14B-540P
+python3 generate_video_df.py \
+  --model_id ${model_id} \
+  --resolution 540P \
+  --ar_step 0 \
+  --base_num_frames 97 \
+  --num_frames 289 \
+  --overlap_history 17 \
+  --inference_steps 50 \
+  --guidance_scale 6 \
+  --batch_size 10 \
+  --preserve_image_aspect_ratio \
+  --video "video.mp4" \
+  --prompt "The first thing he does" \
+  "The second thing he does." \
+  "The third thing he does." \
+  --negative_prompt "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards" \
+  --addnoise_condition 20 \
+  --use_ret_steps \
+  --teacache_thresh 0.0 \
+  --offload
+```
+
+Easy install instructions for those like me using Runpod for H100 and multi-gpu:
+```
+#create once on new pod
+export HF_HOME=/workspace/
+export TZ=America/Los_Angeles
+python -m venv venv
+git clone https://github.com/pftq/SkyReels-V2_Improvements
+mv SkyReels-V2_Improvements SkyReels-V2
+cd /workspace/SkyReels-V2
+source /workspace/venv/bin/activate
+pip install torch==2.5.1
+pip install --upgrade wheel setuptools
+pip install packaging
+pip install -r requirements.txt --no-build-isolation
+```
+```
+#always run at the start to use persisting drive
+export HF_HOME=/workspace/
+export TZ=America/Los_Angeles
+source /workspace/venv/bin/activate
+cd /workspace/SkyReels-V2
+```
+
+<hr>
 <p align="center">
   <img src="assets/logo2.png" alt="SkyReels Logo" width="50%">
 </p>
