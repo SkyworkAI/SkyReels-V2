@@ -1,4 +1,4 @@
-expor SkyCaptioner_V1_Model_PATH="/path/to/your_local_model_path"
+export SkyCaptioner_V1_Model_PATH="/path/to/your_local_model_path"
 
 python scripts/vllm_struct_caption.py \
     --model_path ${SkyCaptioner_V1_Model_PATH} \
