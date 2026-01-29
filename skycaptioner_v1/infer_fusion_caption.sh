@@ -1,4 +1,4 @@
-expor LLM_MODEL_PATH="/path/to/your_local_model_path2"
+export LLM_MODEL_PATH="/path/to/your_local_model_path2"
 
 python scripts/vllm_fusion_caption.py \
     --model_path ${LLM_MODEL_PATH} \
