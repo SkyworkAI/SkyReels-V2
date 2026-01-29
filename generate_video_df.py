@@ -12,8 +12,8 @@ from skyreels_v2_infer import DiffusionForcingPipeline
 from skyreels_v2_infer.modules import download_model
 from skyreels_v2_infer.pipelines import PromptEnhancer
 from skyreels_v2_infer.pipelines.image2video_pipeline import resizecrop
-from moviepy.editor import VideoFileClip
-
+#from moviepy.editor import VideoFileClip
+from moviepy import *
 
 def get_video_num_frames_moviepy(video_path):
     with VideoFileClip(video_path) as clip:
@@ -215,6 +215,8 @@ if __name__ == "__main__":
 
     if local_rank == 0:
         current_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
-        video_out_file = f"{args.prompt[:100].replace('/','')}_{args.seed}_{current_time}.mp4"
+        # Limit filename length and remove special characters
+        safe_prompt = args.prompt[:20].replace('/', '').replace('\\', '').replace(':', '').replace('*', '').replace('?', '').replace('"', '').replace('<', '').replace('>', '').replace('|', '').replace(' ', '_')
+        video_out_file = f"{safe_prompt}_{args.seed}_{current_time}.mp4"
         output_path = os.path.join(save_dir, video_out_file)
         imageio.mimwrite(output_path, video_frames, fps=fps, quality=8, output_params=["-loglevel", "error"])

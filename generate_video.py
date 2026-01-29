@@ -156,6 +156,8 @@ if __name__ == "__main__":
 
     if local_rank == 0:
         current_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
-        video_out_file = f"{args.prompt[:100].replace('/','')}_{args.seed}_{current_time}.mp4"
+        # Limit filename length and remove special characters
+        safe_prompt = args.prompt[:20].replace('/', '').replace('\\', '').replace(':', '').replace('*', '').replace('?', '').replace('"', '').replace('<', '').replace('>', '').replace('|', '').replace(' ', '_')
+        video_out_file = f"{safe_prompt}_{args.seed}_{current_time}.mp4"
         output_path = os.path.join(save_dir, video_out_file)
         imageio.mimwrite(output_path, video_frames, fps=args.fps, quality=8, output_params=["-loglevel", "error"])
