@@ -1,6 +1,7 @@
 torch==2.5.1
 torchvision==0.20.1
-opencv-python==4.10.0.84
+# opencv-python==4.10.0.84 
+opencv-python
 diffusers>=0.31.0
 transformers==4.49.0
 tokenizers==0.21.1
@@ -12,5 +13,5 @@ ftfy
 dashscope
 imageio-ffmpeg
 flash_attn
-numpy>=1.23.5,<2
+numpy==1.26.4  
 xfuser
