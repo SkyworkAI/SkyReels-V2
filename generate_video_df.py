@@ -63,6 +63,15 @@ if __name__ == "__main__":
         help="Using Retention Steps will result in faster generation speed and better generation quality.")
     args = parser.parse_args()
 
+    if args.video_path:
+        if not os.path.isfile(args.video_path):
+            parser.error(f"--video_path is not a file: {args.video_path}")
+        if args.overlap_history is None or not 0 < args.overlap_history < args.base_num_frames:
+            parser.error("--video_path requires --overlap_history greater than 0 and smaller than --base_num_frames")
+        (v_width, v_height), input_num_frames = get_video_num_frames_moviepy(args.video_path)
+        if input_num_frames < args.overlap_history:
+            parser.error(f"Input video has {input_num_frames} frames, fewer than --overlap_history={args.overlap_history}")
+
     args.model_id = download_model(args.model_id)
     print("model_id:", args.model_id)
 
@@ -153,9 +162,7 @@ if __name__ == "__main__":
     print(f"prompt:{prompt_input}")
     print(f"guidance_scale:{guidance_scale}")
 
-    if os.path.exists(args.video_path):
-        (v_width, v_height), input_num_frames = get_video_num_frames_moviepy(args.video_path)
-        assert input_num_frames >= args.overlap_history, "The input video is too short."
+    if args.video_path:
 
         if v_height > v_width:
             width, height = height, width
